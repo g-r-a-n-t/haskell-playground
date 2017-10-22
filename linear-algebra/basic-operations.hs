@@ -15,3 +15,15 @@ removeN n xs = let (ys,zs) = splitAt n xs   in   ys ++ (tail zs)
 determinant :: [[Int]] -> Int
 determinant [[a,b],[c,d]] = a * d - b * c
 determinant matrix = sum (map (\(scalar, matrix) -> scalar * (determinant matrix)) (zip (negateOdds (matrix!!0)) (subMatrices matrix)))
+
+-- dot product
+dot :: [Int] -> [Int] -> Int
+dot v1 v2 = sum (map (\(a,b) -> a * b) (zip v1 v2))
+
+-- vector addition
+add :: [Int] -> [Int] -> [Int]
+add v1 v2 = map (\(a,b) -> a + b) (zip v1 v2)
+
+-- scale vector
+scale :: Int -> [Int] -> [Int]
+scale s v = map (\a -> a * s) v
