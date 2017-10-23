@@ -1,4 +1,4 @@
-module Gla where
+module Gla.Matrices where
 
 -- determinant
 negateOdds :: [Int] -> [Int]
@@ -16,14 +16,9 @@ determinant :: [[Int]] -> Int
 determinant [[a,b],[c,d]] = a * d - b * c
 determinant matrix = sum (map (\(scalar, matrix) -> scalar * (determinant matrix)) (zip (negateOdds (matrix!!0)) (subMatrices matrix)))
 
--- dot product
-dot :: [Int] -> [Int] -> Int
-dot v1 v2 = sum (map (\(a,b) -> a * b) (zip v1 v2))
+-- mirror
+--mirror :: [[Int]] -> [[Int]]
+--mirror matrix = fold 
 
--- vector addition
-add :: [Int] -> [Int] -> [Int]
-add v1 v2 = map (\(a,b) -> a + b) (zip v1 v2)
+-- multiply
 
--- scale vector
-scale :: Int -> [Int] -> [Int]
-scale s v = map (\a -> a * s) v
