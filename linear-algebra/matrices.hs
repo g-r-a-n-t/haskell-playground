@@ -1,5 +1,7 @@
 module Gla.Matrices where
 
+import Gla.Vectors
+
 -- determinant
 negateOdds :: [Int] -> [Int]
 negateOdds list = map (\(x,y) -> x * y) (zip (map (\x -> (-1)^x) [0..(length list) - 1]) list)
@@ -26,4 +28,8 @@ mirror :: [[Int]] -> [[Int]]
 mirror matrix = foldr (\v accum -> spread accum v) (emptyMatrix (length (matrix!!0))) matrix
 
 -- multiply
+dots :: [Int] -> [[Int]] -> [Int]
+dots v1 m = map (\v2 -> Gla.Vectors.dot v1 v2) m 
 
+multiply :: [[Int]] -> [[Int]] -> [[Int]]
+multiply m1 m2 = map (\v1 -> dots v1 (mirror m2) ) m1

@@ -12,3 +12,4 @@ Linear algebra is useful for many things, so I'm making a library to better my u
 ### Matrices
 - determinant
 - mirroring
+- multiplication
