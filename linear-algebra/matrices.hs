@@ -33,3 +33,11 @@ dots v1 m = map (\v2 -> Gla.Vectors.dot v1 v2) m
 
 multiply :: [[Int]] -> [[Int]] -> [[Int]]
 multiply m1 m2 = map (\v1 -> dots v1 (mirror m2) ) m1
+
+-- identity
+zeroVector n = take n $ repeat 0
+replaceN n x l = take n l ++ [x] ++ drop (n + 1) l
+
+identity :: Int -> [[Int]]
+identity n = map (\i -> replaceN i 1 (zeroVector n)) [0..(n-1)]
+
