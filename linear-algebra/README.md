@@ -1,12 +1,14 @@
 # Grant's Linear Algebra Library
 
-Linear algebra is useful for alot of things and I never really took the time to learn it, so I'm making my own library.
+Linear algebra is useful for many things, so I'm making a library to better my understanding of it.
 
 ## Supported operations
 ### Vectors
 - addition
+- subtraction
 - dot product
 - scaling
 
 ### Matrices
 - determinant
+- mirroring

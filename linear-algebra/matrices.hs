@@ -17,8 +17,13 @@ determinant [[a,b],[c,d]] = a * d - b * c
 determinant matrix = sum (map (\(scalar, matrix) -> scalar * (determinant matrix)) (zip (negateOdds (matrix!!0)) (subMatrices matrix)))
 
 -- mirror
---mirror :: [[Int]] -> [[Int]]
---mirror matrix = fold 
+spread :: [[Int]] -> [Int] -> [[Int]]
+spread l1 l2 = map (\(a,b) -> a : l1!!b) (zip l2 [0..])
+
+emptyMatrix n = take n $ repeat []
+
+mirror :: [[Int]] -> [[Int]]
+mirror matrix = foldr (\v accum -> spread accum v) (emptyMatrix (length (matrix!!0))) matrix
 
 -- multiply
 
