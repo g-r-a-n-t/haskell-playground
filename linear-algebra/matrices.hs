@@ -48,12 +48,21 @@ cofactorValue (l,t) m = m!!t!!l * (-1)^(l+t)
 cofactor :: Num a => [[a]] -> [[a]]
 cofactor m = map (\t -> map (\l -> cofactorValue (l,t) m) [0..(length m) - 1]) [0..(length m) - 1]
 
--- inverse
+-- minors
 minor :: Num a => (Int, Int) -> [[a]] -> a
 minor (l,t) m = determinant (map (\v -> removeN l v) (removeN t m))
 
 minors :: Num a => [[a]] -> [[a]]
+minors [[a,b],[c,d]] = [[d,c],[b,a]]
 minors m = map (\t -> map (\l -> minor (l,t) m) [0..(length m) - 1]) [0..(length m) - 1]
 
+-- inverse
 inverse :: Fractional a => [[a]] -> [[a]]
-inverse m = Gla.Matrices.scale (1 / (determinant m)) (mirror  (cofactor (minors m))) 
+inverse m = Gla.Matrices.scale (1 / (determinant m)) (mirror  (cofactor (minors m)))
+
+
+
+
+
+
+
