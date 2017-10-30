@@ -13,5 +13,6 @@ Linear algebra is useful for many things, so I'm making a library to better my u
 - determinant    `determinant [[1,2,3],[4,5,6],[7,8,9]] --> 0`
 - mirroring      `mirror [[1,2],[3,4]] --> [[1,3],[2,4]]`
 - multiplication `multiply [[1,2],[3,4]] [[5,6],[7,8]] --> [[19,22],[43,50]]`
+- transform      `transform [1,2] [[1,2],[3,4]] --> [5,11]`
 - identity       `identity 3 --> [[1,0,0],[0,1,0],[0,0,1]]`
 - inverse        `inverse [[1,2,3],[5,5,6],[8,8,9]] --> [[-1,2,-1],[1,-5,3],[0,2.7,-1.7]]`

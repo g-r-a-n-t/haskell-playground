@@ -1,4 +1,4 @@
-module Gla.Tests where
+module Gla.MatrixTests where
 
 import Gla.Matrices
 import Test.HUnit
@@ -21,7 +21,9 @@ tests = TestList [
   TestCase (assertEqual "identity test 1" identity2 (identity 2)),
   TestCase (assertEqual "identity test 2" identity3 (identity 3)),
   TestCase (assertEqual "checker test 1" [[1,-2,3],[-4,5,-6],[7,-8,9]] (cofactor matrix3x3_2)),
-  TestCase (assertEqual "inverse test 1" [[1.5,-0.5,-0.25],[-1,0,0.5],[-0.5,0.5,0]] (inverse matrix3x3_3))
+  TestCase (assertEqual "inverse test 1" [[1.5,-0.5,-0.25],[-1,0,0.5],[-0.5,0.5,0]] (inverse matrix3x3_3)),
+  TestCase (assertEqual "transform test 1" [5,11] (transform matrix2x2_1 [1,2])),
+  TestCase (assertEqual "transform test 2" [14,32,50] (transform matrix3x3_2 [1,2,3]))
   ]
 
 runTests = runTestTT (tests)

@@ -1,4 +1,4 @@
-module Gla.Tests where
+module Gla.VectorTests where
 
 import Gla.Vectors
 import Test.HUnit
