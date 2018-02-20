@@ -1,29 +1,33 @@
 module Gla.MatrixTests where
 
 import Gla.Matrices
+import Gla.Vectors
 import Test.HUnit
+import Math.Polynomial
 
-matrix2x2_1 = [[1,2],[3,4]]
-matrix2x2_2 = [[5,6],[7,8]]
-matrix3x3_1 = [[1,2,3],[4,5,6],[7,7,9]]
-matrix3x3_2 = [[1,2,3],[4,5,6],[7,8,9]]
-matrix3x3_3 = [[2,1,2],[2,1,4],[4,4,4]]
-identity2 = [[1,0],[0,1]]
-identity3 = [[1,0,0],[0,1,0],[0,0,1]]
+matrix2x2_1 = numMatrixToPolyMatrix [[1,2],[3,4]]
+matrix2x2_2 = numMatrixToPolyMatrix [[1,1],[1,1]]
+matrix2x2_3 = numMatrixToPolyMatrix [[0,1],[2,3]]
+matrix2x2_4 = numMatrixToPolyMatrix [[2,4],[6,8]]
+matrix2x2_5 = numMatrixToPolyMatrix [[1,2],[5,7]]
+matrix2x2_6 = numMatrixToPolyMatrix [[1,5],[2,7]]
+matrix2x2_7 = numMatrixToPolyMatrix [[4,7],[8,15]]
+matrix3x3_1 = numMatrixToPolyMatrix [[1,2,2],[3,4,4],[5,6,7]]
+matrix4x4_1 = numMatrixToPolyMatrix [[1,2,3,4],[2,2,2,2],[3,4,1,1],[5,3,3,2]]
 
 tests = TestList [
-  TestCase (assertEqual "determinant test 1" (-2) (determinant matrix2x2_1)),
-  TestCase (assertEqual "determinant test 2" (-6) (determinant matrix3x3_1)),
-  TestCase (assertEqual "mirror test 1" [[1,4,7],[2,5,8],[3,6,9]] (mirror matrix3x3_2)),
-  TestCase (assertEqual "scale test 1" [[2,4,6],[8,10,12],[14,16,18]] (scale 2 matrix3x3_2)),
-  TestCase (assertEqual "multiply test 1" [[19,22],[43,50]] (multiply matrix2x2_1 matrix2x2_2)),
-  TestCase (assertEqual "multiply test 2" [[30,36,42],[66,81,96],[98,121,144]] (multiply matrix3x3_1 matrix3x3_2)),
-  TestCase (assertEqual "identity test 1" identity2 (identity 2)),
-  TestCase (assertEqual "identity test 2" identity3 (identity 3)),
-  TestCase (assertEqual "checker test 1" [[1,-2,3],[-4,5,-6],[7,-8,9]] (cofactor matrix3x3_2)),
-  TestCase (assertEqual "inverse test 1" [[1.5,-0.5,-0.25],[-1,0,0.5],[-0.5,0.5,0]] (inverse matrix3x3_3)),
-  TestCase (assertEqual "transform test 1" [5,11] (transform matrix2x2_1 [1,2])),
-  TestCase (assertEqual "transform test 2" [14,32,50] (transform matrix3x3_2 [1,2,3]))
+  TestCase (assertEqual "nums to polys test 1" [[numToPoly 1,numToPoly 2],[numToPoly 3, numToPoly 4]] matrix2x2_1),
+  TestCase (assertEqual "polys to nums test 2" [[1,2],[3,4]] (polyMatrixToNumMatrix matrix2x2_1)),
+  TestCase (assertEqual "scale test 1" matrix2x2_4 (Gla.Matrices.scale (numToPoly 2) matrix2x2_1)),
+  TestCase (assertEqual "minor test 1" matrix2x2_1 (minor matrix3x3_1 2 2)),
+  TestCase (assertEqual "minor test 2" matrix2x2_5 (minor matrix3x3_1 1 1)),
+  TestCase (assertEqual "cofactor test 1" (numToPoly (-3)) (cofactor matrix3x3_1 1 1)),
+  TestCase (assertEqual "determinant test 1" (numToPoly (-8)) (determinant matrix2x2_4)),
+  TestCase (assertEqual "determinant test 2" (numToPoly (-2)) (determinant matrix3x3_1)),
+  TestCase (assertEqual "determinant test 3" (numToPoly 4) (determinant matrix4x4_1)),
+  TestCase (assertEqual "mirror test 1" matrix2x2_6 (mirror matrix2x2_5)),
+  TestCase (assertEqual "multiply test 1" matrix2x2_7 (multipy matrix2x2_1 matrix2x2_3)),
+  TestCase (assertEqual "for commas" True True)
   ]
 
 runTests = runTestTT (tests)

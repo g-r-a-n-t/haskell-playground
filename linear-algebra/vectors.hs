@@ -3,31 +3,35 @@ module Gla.Vectors where
 import Math.Polynomial
 
 -- conversions
-numToPoly :: (Num a, Eq a) => a -> Poly a
+numToPoly :: Float -> Poly Float
 numToPoly x = poly BE [x]
 
-polyToNum :: (Num a, Eq a) => Poly a -> a
+polyToNum :: Poly Float -> Float
 polyToNum p = evalPoly p 0
 
-numsToPolys :: (Num a, Eq a) => [a] -> [Poly a]
+numsToPolys :: [Float] -> [Poly Float]
 numsToPolys v = map (\x -> numToPoly x) v
 
-polysToNums :: (Num a, Eq a) => [Poly a] -> [a]
+polysToNums :: [Poly Float] -> [Float]
 polysToNums v = map (\p -> polyToNum p) v
 
+--misc
+subPoly :: Poly Float -> Poly Float -> Poly Float
+subPoly a b = addPoly a (scalePoly (-1) b)
+
 -- dot product
-dot :: (Num a, Eq a) => [Poly a] -> [Poly a] -> Poly a
+dot :: [Poly Float] -> [Poly Float] -> Poly Float
 dot v1 v2 = sumPolys (map (\(a,b) -> multPoly a b) (zip v1 v2))
 
 -- addition
-add :: (Num a, Eq a) => [Poly a] -> [Poly a] -> [Poly a]
+add :: [Poly Float] -> [Poly Float] -> [Poly Float]
 add v1 v2 = map (\(a,b) -> addPoly a b) (zip v1 v2)
 
 -- subtraction
-subtract :: (Num a, Eq a) => [Poly a] -> [Poly a] -> [Poly a]
-subtract v1 v2 = map (\(a,b) -> addPoly a (scalePoly (-1) b)) (zip v1 v2)
+subtract :: [Poly Float] -> [Poly Float] -> [Poly Float]
+subtract a b = map (\(x,y) -> subPoly x y) (zip a b)
 
 -- scale
-scale :: (Num a, Eq a) => Poly a -> [Poly a] -> [Poly a]
+scale :: Poly Float -> [Poly Float] -> [Poly Float]
 scale s v = map (\a -> multPoly a s) v
 
