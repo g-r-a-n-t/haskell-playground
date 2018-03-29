@@ -15,10 +15,12 @@ removeN n xs = let (ys,zs) = splitAt n xs in ys ++ (tail zs)
 emptyMatrix n = take n $ repeat []
 getRow m i = m!!i
 getCol m j = map (\v -> v!!j) m
+zeroVector n = take n $ repeat (numToPoly 0)
+replaceN n x l = take n l ++ [x] ++ drop (n + 1) l
 
 -- scale
-scale :: Poly Float -> [[Poly Float]] -> [[Poly Float]]
-scale s m = map (\v -> Gla.Vectors.scale s v) m
+scaleMatrix :: Poly Float -> [[Poly Float]] -> [[Poly Float]]
+scaleMatrix s m = map (\v -> Gla.Vectors.scale s v) m
 
 -- minor
 minor :: [[Poly Float]] -> Int -> Int -> [[Poly Float]]
@@ -37,49 +39,37 @@ determinant m = sumPolys (map (\j -> multPoly (m!!0!!j) (cofactor m 0 j)) [0..(l
 mirror :: [[Poly Float]] -> [[Poly Float]]
 mirror m = map (\j -> getCol m j) [0..(length (m!!0))-1]
 
+-- transform
+transform :: [Poly Float] -> [[Poly Float]] -> [Poly Float]
+transform v1 m = map (\v2 -> dot v1 v2) m
+
 -- multiply
-multiply :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
-multiply a b =  
+multiplyMatrices :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
+multiplyMatrices m1 m2 = map (\v -> transform v (mirror m2)) m1
 
----- transform
---transform :: Num a => [[a]] -> [a] -> [a]
---transform m v1 = map (\v2 -> Gla.Vectors.dot v1 v2) m
---
----- identity
---zeroVector n = take n $ repeat 0
---replaceN n x l = take n l ++ [x] ++ drop (n + 1) l
---
---identity :: Int -> [[Int]]
---identity n = map (\i -> replaceN i 1 (zeroVector n)) [0..(n-1)]
---
----- cofactor
---cofactorValue (l,t) m = m!!t!!l * (-1)^(l+t)
---cofactor :: Num a => [[a]] -> [[a]]
---cofactor m = map (\t -> map (\l -> cofactorValue (l,t) m) [0..(length m) - 1]) [0..(length m) - 1]
---
----- minors
---minor :: Num a => (Int, Int) -> [[a]] -> a
---minor (l,t) m = determinant (map (\v -> removeN l v) (removeN t m))
---
---minors :: Num a => [[a]] -> [[a]]
---minors [[a,b],[c,d]] = [[d,c],[b,a]]
---minors m = map (\t -> map (\l -> minor (l,t) m) [0..(length m) - 1]) [0..(length m) - 1]
---
----- inverse
---inverse :: Fractional a => [[a]] -> [[a]]
---inverse m = Gla.Matrices.scale (1 / (determinant m)) (mirror  (cofactor (minors m)))
---
----- eigenvalues
----- polyMatrix :: [[Integer]] -> [[Math.Polynomial.Poly Integer]]
---pmatrix m d = map (\v -> map (\x -> poly BE ([x] ++ (zeroVector d))) v) m
---padd m1 m2 = map (\(a,b) -> Gla.Vectors.padd a b) (zip m1 m2)
---identityDiff m = Gla.Matrices.padd (pmatrix m 0) (pmatrix (Gla.Matrices.scale (-1) (identity (length m))) 1) 
---pcofactorValue (l,z) m = scalePoly (-1)^(l+z) m!!z!!l
---pcofactor m = map (\z -> map (\l -> pcofactorValue (l,z) m) [0..((length m) - 1)]) [0..((length m) - 1)]
---pdeterminant [[a,b],[c,d]] = addPoly (multPoly a d)  (scalePoly (-1) (multPoly b c))
---pdeterminant m = sumPolys (map (\(s, m) -> scalePoly s (pdeterminant m)) (zip ((pcofactor m)!!0) (subMatrices m)))
---
+-- identity
+identity :: Int -> [[Poly Float]]
+identity n = map (\i -> replaceN i (numToPoly 1) (zeroVector n)) [0..(n-1)]
 
+-- comatrix
+comatrix :: [[Poly Float]] -> [[Poly Float]]
+comatrix m = map (\(v,i) -> map (\(_,j) -> cofactor m i j) (zip v [0..])) (zip m [0..])
+
+-- addition
+addMatrix :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
+addMatrix m1 m2 = map (\(v1,v2) -> Gla.Vectors.add v1 v2) (zip m1 m2)
+
+-- subtraction
+subtractMatrix :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
+subtractMatrix m1 m2 = map (\(v1,v2) -> Gla.Vectors.subtract v1 v2) (zip m1 m2)
+
+-- inverse
+--inverse :: [[Poly Float]] -> [[Poly Float]]
+--inverse m = scaleMatrix (powPoly (determinant m) (-1)) (mirror (comatrix m))
+
+-- eigenvalues
+eigenvalues :: [[Poly Float]] -> [Float]
+eigenvalues m = determinant (m - scaleMatrix ())
 
 
 
