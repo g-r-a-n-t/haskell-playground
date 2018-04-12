@@ -17,6 +17,7 @@ matrix2x2_7 = numMatrixToPolyMatrix [[4,7],[8,15]]
 matrix3x2_1 = numMatrixToPolyMatrix [[1,4],[2,3],[1,3]]
 matrix3x2_2 = numMatrixToPolyMatrix [[7,16],[15,36],[24,59]]
 matrix3x3_1 = numMatrixToPolyMatrix [[1,2,2],[3,4,4],[5,6,7]]
+matrix3x3_2 = numMatrixToPolyMatrix [[2,0,0],[1,2,1],[-1,0,1]]
 matrix4x4_1 = numMatrixToPolyMatrix [[1,2,3,4],[2,2,2,2],[3,4,1,1],[5,3,3,2]]
 identity2 = numMatrixToPolyMatrix [[1,0],[0,1]]
 identity3 = numMatrixToPolyMatrix [[1,0,0],[0,1,0],[0,0,1]]
@@ -41,6 +42,7 @@ tests = TestList [
   TestCase (assertEqual "identity test 3"  identity4 (identity 4)),
   TestCase (assertEqual "add test 1"  matrix2x2_1 (addMatrix matrix2x2_2 matrix2x2_3)),
   TestCase (assertEqual "subtract test 1"  matrix2x2_3 (subtractMatrix matrix2x2_1 matrix2x2_2)),
+  TestCase (assertEqual "eigenvalues test 1"  [2,1] (eigenvalues matrix3x3_2)),
   TestCase (assertEqual "for commas" True True)
   ]
 

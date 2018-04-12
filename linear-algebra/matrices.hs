@@ -2,6 +2,8 @@ module Gla.Matrices where
 
 import Gla.Vectors
 import Math.Polynomial
+import Polynomial.Roots
+import Data.Complex
 
 -- conversions
 numMatrixToPolyMatrix :: [[Float]] -> [[Poly Float]]
@@ -10,6 +12,9 @@ numMatrixToPolyMatrix m = map (\v -> numsToPolys v) m
 polyMatrixToNumMatrix :: [[Poly Float]] -> [[Float]]
 polyMatrixToNumMatrix m = map (\v -> polysToNums v) m
 
+numToComplex x = x :+ 0
+numsToComplexes xs = map (\x -> numToComplex x) xs
+
 -- misc
 removeN n xs = let (ys,zs) = splitAt n xs in ys ++ (tail zs) 
 emptyMatrix n = take n $ repeat []
@@ -17,6 +22,11 @@ getRow m i = m!!i
 getCol m j = map (\v -> v!!j) m
 zeroVector n = take n $ repeat (numToPoly 0)
 replaceN n x l = take n l ++ [x] ++ drop (n + 1) l
+removeZeros xs = filter (/=0) xs
+
+-- roots
+findRoots :: Poly Float -> [Float]
+findRoots p = removeZeros (map (\n -> realPart n) (roots 1e-16 1000 (numsToComplexes (polyCoeffs LE p))))
 
 -- scale
 scaleMatrix :: Poly Float -> [[Poly Float]] -> [[Poly Float]]
@@ -69,7 +79,7 @@ subtractMatrix m1 m2 = map (\(v1,v2) -> Gla.Vectors.subtract v1 v2) (zip m1 m2)
 
 -- eigenvalues
 eigenvalues :: [[Poly Float]] -> [Float]
-eigenvalues m = determinant (m - scaleMatrix ())
+eigenvalues m = findRoots (determinant (subtractMatrix m (scaleMatrix x (identity (length m)))))
 
 
 
