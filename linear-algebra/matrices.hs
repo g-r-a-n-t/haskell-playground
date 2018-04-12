@@ -62,8 +62,8 @@ identity :: Int -> [[Poly Float]]
 identity n = map (\i -> replaceN i (numToPoly 1) (zeroVector n)) [0..(n-1)]
 
 -- comatrix
-comatrix :: [[Poly Float]] -> [[Poly Float]]
-comatrix m = map (\(v,i) -> map (\(_,j) -> cofactor m i j) (zip v [0..])) (zip m [0..])
+--comatrix :: [[Poly Float]] -> [[Poly Float]]
+--comatrix m = map (\(v,i) -> map (\(_,j) -> cofactor m i j) (zip v [0..])) (zip m [0..])
 
 -- addition
 addMatrix :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
