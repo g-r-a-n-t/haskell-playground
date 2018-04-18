@@ -23,14 +23,19 @@ getCol m j = map (\v -> v!!j) m
 zeroVector n = take n $ repeat (numToPoly 0)
 replaceN n x l = take n l ++ [x] ++ drop (n + 1) l
 removeZeros xs = filter (/=0) xs
+roundF x = (fromInteger $ round $ x * (10^2)) / (10.0^^2)
+removeDuplicates :: Eq a => [a] -> [a]
+removeDuplicates = foldl (\seen x -> if x `elem` seen
+                                      then seen
+                                      else seen ++ [x]) []
 
 -- roots
 findRoots :: Poly Float -> [Float]
-findRoots p = removeZeros (map (\n -> realPart n) (roots 1e-16 1000 (numsToComplexes (polyCoeffs LE p))))
+findRoots p = removeDuplicates (map (\n -> roundF (realPart n)) (roots 1e-16 1000 (numsToComplexes (polyCoeffs LE p))))
 
 -- scale
-scaleMatrix :: Poly Float -> [[Poly Float]] -> [[Poly Float]]
-scaleMatrix s m = map (\v -> Gla.Vectors.scale s v) m
+scaleM :: Poly Float -> [[Poly Float]] -> [[Poly Float]]
+scaleM s m = map (\v -> scaleV s v) m
 
 -- minor
 minor :: [[Poly Float]] -> Int -> Int -> [[Poly Float]]
@@ -54,8 +59,8 @@ transform :: [Poly Float] -> [[Poly Float]] -> [Poly Float]
 transform v1 m = map (\v2 -> dot v1 v2) m
 
 -- multiply
-multiplyMatrices :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
-multiplyMatrices m1 m2 = map (\v -> transform v (mirror m2)) m1
+multM :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
+multM m1 m2 = map (\v -> transform v (mirror m2)) m1
 
 -- identity
 identity :: Int -> [[Poly Float]]
@@ -66,12 +71,12 @@ identity n = map (\i -> replaceN i (numToPoly 1) (zeroVector n)) [0..(n-1)]
 --comatrix m = map (\(v,i) -> map (\(_,j) -> cofactor m i j) (zip v [0..])) (zip m [0..])
 
 -- addition
-addMatrix :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
-addMatrix m1 m2 = map (\(v1,v2) -> Gla.Vectors.add v1 v2) (zip m1 m2)
+addM :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
+addM m1 m2 = map (\(v1,v2) -> addV v1 v2) (zip m1 m2)
 
 -- subtraction
-subtractMatrix :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
-subtractMatrix m1 m2 = map (\(v1,v2) -> Gla.Vectors.subtract v1 v2) (zip m1 m2)
+subM :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
+subM m1 m2 = map (\(v1,v2) -> subV v1 v2) (zip m1 m2)
 
 -- inverse
 --inverse :: [[Poly Float]] -> [[Poly Float]]
@@ -79,7 +84,7 @@ subtractMatrix m1 m2 = map (\(v1,v2) -> Gla.Vectors.subtract v1 v2) (zip m1 m2)
 
 -- eigenvalues
 eigenvalues :: [[Poly Float]] -> [Float]
-eigenvalues m = findRoots (determinant (subtractMatrix m (scaleMatrix x (identity (length m)))))
+eigenvalues m = findRoots (determinant (subM m (scaleM x (identity (length m)))))
 
 
 

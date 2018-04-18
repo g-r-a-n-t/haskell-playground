@@ -24,14 +24,14 @@ dot :: [Poly Float] -> [Poly Float] -> Poly Float
 dot v1 v2 = sumPolys (map (\(a,b) -> multPoly a b) (zip v1 v2))
 
 -- addition
-add :: [Poly Float] -> [Poly Float] -> [Poly Float]
-add v1 v2 = map (\(a,b) -> addPoly a b) (zip v1 v2)
+addV :: [Poly Float] -> [Poly Float] -> [Poly Float]
+addV v1 v2 = map (\(a,b) -> addPoly a b) (zip v1 v2)
 
 -- subtraction
-subtract :: [Poly Float] -> [Poly Float] -> [Poly Float]
-subtract a b = map (\(x,y) -> subPoly x y) (zip a b)
+subV :: [Poly Float] -> [Poly Float] -> [Poly Float]
+subV a b = map (\(x,y) -> subPoly x y) (zip a b)
 
 -- scale
-scale :: Poly Float -> [Poly Float] -> [Poly Float]
-scale s v = map (\a -> multPoly a s) v
+scaleV :: Poly Float -> [Poly Float] -> [Poly Float]
+scaleV s v = map (\a -> multPoly a s) v
 

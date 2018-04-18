@@ -17,11 +17,11 @@ v4_5_6 = numsToPolys [4,5,6]
 
 
 tests = TestList [
-  TestCase (assertEqual "dot test 1" n11 (Gla.Vectors.dot v1_2 v3_4)),
+  TestCase (assertEqual "dot test 1" n11 (dot v1_2 v3_4)),
   TestCase (assertEqual "dot test 2" n32 (dot v1_2_3 v4_5_6)),
-  TestCase (assertEqual "addition test 1" v4_6 (add v1_2 v3_4)),
-  TestCase (assertEqual "subtraction test 1" vn2_n2 (Gla.Vectors.subtract v1_2 v3_4)),
-  TestCase (assertEqual "scale test 1" v6_8 (scale n2 v3_4))
+  TestCase (assertEqual "addition test 1" v4_6 (addV v1_2 v3_4)),
+  TestCase (assertEqual "subtraction test 1" vn2_n2 (subV v1_2 v3_4)),
+  TestCase (assertEqual "scale test 1" v6_8 (scaleV n2 v3_4))
   ]
 
 runTests = runTestTT (tests)
