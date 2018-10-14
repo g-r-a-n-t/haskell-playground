@@ -40,30 +40,43 @@ identity3 = numMatrixToPolyMatrix [[1,0,0],[0,1,0],[0,0,1]]
 identity4 = numMatrixToPolyMatrix [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
 
 tests = TestList [
-  TestCase (assertEqual "nums to polys test 1" [[numToPoly 1,numToPoly 2],[numToPoly 3, numToPoly 4]] matrix2x2_1),
-  TestCase (assertEqual "polys to nums test 2" [[1,2],[3,4]] (polyMatrixToNumMatrix matrix2x2_1)),
-  TestCase (assertEqual "scale test 1" matrix2x2_4 (scaleM (numToPoly 2) matrix2x2_1)),
-  TestCase (assertEqual "minor test 1" (numToPoly (-2)) (minor matrix3x3_1 2 2)),
-  TestCase (assertEqual "minor test 2" (numToPoly (-3)) (minor matrix3x3_1 1 1)),
-  TestCase (assertEqual "cofactor test 1" (numToPoly (-3)) (cofactor matrix3x3_1 1 1)),
-  TestCase (assertEqual "cofactor test 2" (numToPoly (-2)) (cofactor matrix3x3_1 2 2)),
-  TestCase (assertEqual "cofactor test 3" (numToPoly 4) (cofactor matrix4x4_1 2 3)),
-  TestCase (assertEqual "determinant test 1" (numToPoly (-8)) (determinant matrix2x2_4)),
-  TestCase (assertEqual "determinant test 2" (numToPoly (-2)) (determinant matrix3x3_1)),
-  TestCase (assertEqual "determinant test 3" (numToPoly 4) (determinant matrix4x4_1)),
-  TestCase (assertEqual "mirror test 1" matrix2x2_6 (mirror matrix2x2_5)),
-  TestCase (assertEqual "transform test 1" vector11_23_38 (transform vector1_2_3 matrix3x3_1)),
-  TestCase (assertEqual "multiply test 1" matrix2x2_7 (multM matrix2x2_1 matrix2x2_3)),
-  TestCase (assertEqual "multiply test 2" matrix3x2_2 (multM matrix3x3_1 matrix3x2_1)),
-  TestCase (assertEqual "identity test 1" identity2 (identity 2)),
-  TestCase (assertEqual "identity test 2" identity3 (identity 3)),
-  TestCase (assertEqual "identity test 3" identity4 (identity 4)),
-  TestCase (assertEqual "cofactor matrix test 1"  matrix3x3_5 (cofactorMatrix matrix3x3_4)),
-  TestCase (assertEqual "subtract test 1" matrix2x2_3 (subM matrix2x2_1 matrix2x2_2)),
-  TestCase (assertEqual "inverse test 1" (roundMatrix (polyMatrixToNumMatrix matrix3x3_6)) (roundMatrix (polyMatrixToNumMatrix (inverse matrix3x3_4)))),
-  TestCase (assertEqual "eigenvalues test 1" [2,1] (eigenvalues matrix3x3_2)),
-  TestCase (assertEqual "eigenvalues test 2" [-4,3,0] (eigenvalues matrix3x3_3)),
-  TestCase (assertEqual "for commas" True True)
+    TestCase (assertEqual "nums to polys test 1" [[numToPoly 1,numToPoly 2],[numToPoly 3, numToPoly 4]] matrix2x2_1),
+    TestCase (assertEqual "polys to nums test 2" [[1,2],[3,4]] (polyMatrixToNumMatrix matrix2x2_1)),
+
+    TestCase (assertEqual "scale test 1" matrix2x2_4 (scaleM (numToPoly 2) matrix2x2_1)),
+
+    TestCase (assertEqual "minor test 1" (numToPoly (-2)) (minor matrix3x3_1 2 2)),
+    TestCase (assertEqual "minor test 2" (numToPoly (-3)) (minor matrix3x3_1 1 1)),
+
+    TestCase (assertEqual "cofactor test 1" (numToPoly (-3)) (cofactor matrix3x3_1 1 1)),
+    TestCase (assertEqual "cofactor test 2" (numToPoly (-2)) (cofactor matrix3x3_1 2 2)),
+    TestCase (assertEqual "cofactor test 3" (numToPoly 4) (cofactor matrix4x4_1 2 3)),
+
+    TestCase (assertEqual "determinant test 1" (numToPoly (-8)) (determinant matrix2x2_4)),
+    TestCase (assertEqual "determinant test 2" (numToPoly (-2)) (determinant matrix3x3_1)),
+    TestCase (assertEqual "determinant test 3" (numToPoly 4) (determinant matrix4x4_1)),
+
+    TestCase (assertEqual "mirror test 1" matrix2x2_6 (mirror matrix2x2_5)),
+
+    TestCase (assertEqual "transform test 1" vector11_23_38 (transform vector1_2_3 matrix3x3_1)),
+
+    TestCase (assertEqual "multiply test 1" matrix2x2_7 (multM matrix2x2_1 matrix2x2_3)),
+    TestCase (assertEqual "multiply test 2" matrix3x2_2 (multM matrix3x3_1 matrix3x2_1)),
+
+    TestCase (assertEqual "identity test 1" identity2 (identity 2)),
+    TestCase (assertEqual "identity test 2" identity3 (identity 3)),
+    TestCase (assertEqual "identity test 3" identity4 (identity 4)),
+
+    TestCase (assertEqual "cofactor matrix test 1"  matrix3x3_5 (cofactorMatrix matrix3x3_4)),
+
+    TestCase (assertEqual "subtract test 1" matrix2x2_3 (subM matrix2x2_1 matrix2x2_2)),
+
+    TestCase (assertEqual "inverse test 1" (roundMatrix (polyMatrixToNumMatrix matrix3x3_6)) (roundMatrix (polyMatrixToNumMatrix (inverse matrix3x3_4)))),
+
+    TestCase (assertEqual "eigenvalues test 1" [2,1] (eigenvalues matrix3x3_2)),
+    TestCase (assertEqual "eigenvalues test 2" [-4,3,0] (eigenvalues matrix3x3_3)),
+
+    TestCase (assertEqual "for commas" True True)
   ]
 
 runTests = runTestTT (tests)

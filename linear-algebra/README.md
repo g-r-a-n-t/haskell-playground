@@ -1,7 +1,5 @@
 # Grant's Linear Algebra Library
 
-Don't use this.
-
 ## Supported operations
 ### Gla.Vectors
 - `addV [1,2] [3,4] --> [3,6]`
@@ -22,3 +20,16 @@ Don't use this.
 - `subM [[1,2],[3,4]] [[1,1],[1,1]] --> [[0,1],[2,3]]`
 - `inverse [[1,2,3],[5,5,6],[8,8,9]] --> [[-1,2,-1],[1,-5,3],[0,2.7,-1.7]]`
 - `eigenvalues [[2,0,0],[1,2,1],[-1,0,1]] --> [2,1]`
+
+## Required Libraries
+- Math.Polynomial
+- Polynomial.Roots
+
+## Running Tests
+```
+$ ghci vector_tests vectors
+> runTests
+
+$ ghci matrix_tests matrices vectors
+> runTests
+```
