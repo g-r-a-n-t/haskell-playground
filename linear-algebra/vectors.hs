@@ -19,6 +19,10 @@ polysToNums v = map (\p -> polyToNum p) v
 subPoly :: Poly Float -> Poly Float -> Poly Float
 subPoly a b = addPoly a (scalePoly (-1) b)
 
+-- invert polynomial (only works with constants: 4 -> 1/4, 2x + 4 -> 1/4)
+invertPoly :: Poly Float -> Poly Float
+invertPoly p = numToPoly (1 / polyToNum(p))
+
 -- dot product
 dot :: [Poly Float] -> [Poly Float] -> Poly Float
 dot v1 v2 = sumPolys (map (\(a,b) -> multPoly a b) (zip v1 v2))
@@ -34,4 +38,3 @@ subV a b = map (\(x,y) -> subPoly x y) (zip a b)
 -- scale
 scaleV :: Poly Float -> [Poly Float] -> [Poly Float]
 scaleV s v = map (\a -> multPoly a s) v
-

@@ -16,7 +16,7 @@ numToComplex x = x :+ 0
 numsToComplexes xs = map (\x -> numToComplex x) xs
 
 -- misc
-removeN n xs = let (ys,zs) = splitAt n xs in ys ++ (tail zs) 
+removeN n xs = let (ys,zs) = splitAt n xs in ys ++ (tail zs)
 emptyMatrix n = take n $ repeat []
 getRow m i = m!!i
 getCol m j = map (\v -> v!!j) m
@@ -38,12 +38,12 @@ scaleM :: Poly Float -> [[Poly Float]] -> [[Poly Float]]
 scaleM s m = map (\v -> scaleV s v) m
 
 -- minor
-minor :: [[Poly Float]] -> Int -> Int -> [[Poly Float]]
-minor m i j = removeN i (map (\v -> removeN j v) m)
+minor :: [[Poly Float]] -> Int -> Int -> Poly Float
+minor m i j = determinant (removeN i (map (\v -> removeN j v) m))
 
 -- cofactor
 cofactor :: [[Poly Float]] -> Int -> Int -> Poly Float
-cofactor m i j = scalePoly ((-1)^(i+j)) (determinant (minor m i j))
+cofactor m i j = scalePoly ((-1)^(i+j)) (minor m i j)
 
 -- determinant
 determinant :: [[Poly Float]] -> Poly Float
@@ -66,9 +66,9 @@ multM m1 m2 = map (\v -> transform v (mirror m2)) m1
 identity :: Int -> [[Poly Float]]
 identity n = map (\i -> replaceN i (numToPoly 1) (zeroVector n)) [0..(n-1)]
 
--- comatrix
---comatrix :: [[Poly Float]] -> [[Poly Float]]
---comatrix m = map (\(v,i) -> map (\(_,j) -> cofactor m i j) (zip v [0..])) (zip m [0..])
+-- cofactor or adjunct matrix
+cofactorMatrix :: [[Poly Float]] -> [[Poly Float]]
+cofactorMatrix m = map (\(v,i) -> map (\(_,j) -> cofactor m j i) (zip v [0..])) (zip m [0..])
 
 -- addition
 addM :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
@@ -78,16 +78,10 @@ addM m1 m2 = map (\(v1,v2) -> addV v1 v2) (zip m1 m2)
 subM :: [[Poly Float]] -> [[Poly Float]] -> [[Poly Float]]
 subM m1 m2 = map (\(v1,v2) -> subV v1 v2) (zip m1 m2)
 
--- inverse
---inverse :: [[Poly Float]] -> [[Poly Float]]
---inverse m = scaleMatrix (powPoly (determinant m) (-1)) (mirror (comatrix m))
+-- inverse (note: any coefficients are lost here)
+inverse :: [[Poly Float]] -> [[Poly Float]]
+inverse m = scaleM (invertPoly (determinant m)) (cofactorMatrix m)
 
 -- eigenvalues
 eigenvalues :: [[Poly Float]] -> [Float]
 eigenvalues m = findRoots (determinant (subM m (scaleM x (identity (length m)))))
-
-
-
-
-
-
