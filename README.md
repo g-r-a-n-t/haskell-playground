@@ -1,4 +1,4 @@
 # Haskell Playground
 
 ## Topics
-- Linear Algebra
+- [Linear Algebra](linear-algebra)

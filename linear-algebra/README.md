@@ -1,4 +1,4 @@
-# Grant's Linear Algebra Library
+# Linear Algebra
 
 ## Supported operations
 ### Gla.Vectors
