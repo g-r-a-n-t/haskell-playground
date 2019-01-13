@@ -38,8 +38,8 @@ mPointAdd d p q
   | otherwise              =
     let m  = if p == q then mTangent d p else mSlope d p q
         xr = (m^2 - xp - xq) `mod` n
-        yr = (yp + m * (xr - xp)) `mod` n
-    in (xr, (-yr) `mod` n)
+        yr = (-(yp + m * (xr - xp))) `mod` n
+    in (xr, yr)
   where (a, b, n) = d
         (xp, yp)  = p
         (xq, yq)  = q
@@ -54,7 +54,10 @@ tests = TestList [
   TestCase (assertEqual "modular point addition" (39, 6) (mPointAdd domain (3, 6) (12, 3))),
   TestCase (assertEqual "modular point addition" (24, 2) (mPointAdd domain (12, 3) (12, 3))),
   TestCase (assertEqual "modular point addition" (54, 12) (mPointAdd domain (3, 6) (22, 5))),
-  TestCase (assertEqual "modular point addition" (12, 94) (mPointAdd domain (22, 5) (32, 7)))
+  TestCase (assertEqual "modular point addition" (12, 94) (mPointAdd domain (22, 5) (32, 7))),
+  TestCase (assertEqual "modular point addition" (12, 94) (mPointAdd domain (32, 7) (22, 5))),
+  TestCase (assertEqual "modular point addition" (21, 24) (mPointAdd domain (22, 5) (22, 5))),
+  TestCase (assertEqual "modular point addition" (80, 10) (mPointAdd domain (3, 6) (3, 6)))
   ]
 
 runTests = runTestTT (tests)
