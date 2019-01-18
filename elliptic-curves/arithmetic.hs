@@ -43,8 +43,8 @@ inf = -1 -- TODO: find a better way to handle infinity
 -- modular point addition
 mPointAdd :: (Integer, Integer, Integer) -> (Integer, Integer) -> (Integer, Integer) -> (Integer, Integer)
 mPointAdd d p q
-  | (xp, yp) == (inf, inf) = (xq, (-yq) `mod` n) -- P = 0
-  | (xq, yq) == (inf, inf) = (xp, (-yp) `mod` n) -- Q = 0
+  | (xp, yp) == (inf, inf) = (xq, yq) -- P = 0
+  | (xq, yq) == (inf, inf) = (xp, yp) -- Q = 0
   | (xp, yp) == (xq, (-yq) `mod` n) = (inf, inf)
   | otherwise =
     let m  = if p == q then mTangent d p else mSlope d p q
@@ -59,11 +59,9 @@ mPointScale :: (Integer, Integer, Integer) -> Integer -> (Integer, Integer) -> (
 mPointScale d s p
   | s == 0 = (inf, inf)
   | otherwise =
-    let bits    = toBin s
-        nBits   = length bits
-        doubles = map (\n -> pointDoubledNTimes d n p) [0..nBits]
-    in foldl (\acc (bit, double) -> if bit == 1 then mPointAdd d acc double else acc) p (zip binary doubles)
-
+    let indices = reverse (foldl (\acc (b, i) -> if b == 1 then acc ++ [i] else acc) [] (zip (toBin s) [0..]))
+        doubles = map (\i -> pointDoubledNTimes d i p) indices
+    in foldl (\acc double -> mPointAdd d acc double) (head doubles) (tail doubles)
 
 pointDoubledNTimes :: (Integer, Integer, Integer) -> Integer -> (Integer, Integer) -> (Integer, Integer)
 pointDoubledNTimes d n p -- TODO: Memoize this
