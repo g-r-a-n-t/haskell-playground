@@ -1,5 +1,7 @@
 # Linear Algebra
 
+![](./header.png)
+
 ## Supported operations
 ### Gla.Vectors
 - `addV [1,2] [3,4] --> [3,6]`
