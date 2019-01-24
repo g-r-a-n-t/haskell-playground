@@ -2,6 +2,12 @@ module Gec.ModularArithmetic where
 
 import Test.HUnit
 
+-----------
+-- Types --
+-----------
+-- a b n
+data Curve = Curve Integer Integer Integer
+
 -------------
 -- helpers --
 -------------
@@ -27,15 +33,15 @@ mInverse a n
         (gcd, x, y) = eGCD a' n
 
 -- modular slope at single point
-mTangent :: (Integer, Integer, Integer) -> (Integer, Integer) -> Integer
-mTangent (a, b, n) (x, y) = (3 * x^2 + a) * (mInverse (2 * y) n) `mod` n
+mTangent :: Curve -> (Integer, Integer) -> Integer
+mTangent (Curve a b n) (x, y) = (3 * x^2 + a) * (mInverse (2 * y) n) `mod` n
 
 -- modular slope between two points
-mSlope :: (Integer, Integer, Integer) -> (Integer, Integer) -> (Integer, Integer) -> Integer
-mSlope (a, b, n) (xp, yp) (xq, yq) = ((yp - yq) * (mInverse (xp - xq) n)) `mod` n
+mSlope :: Curve -> (Integer, Integer) -> (Integer, Integer) -> Integer
+mSlope (Curve a b n) (xp, yp) (xq, yq) = ((yp - yq) * (mInverse (xp - xq) n)) `mod` n
 
 
-pointDoubledNTimes :: (Integer, Integer, Integer) -> Integer -> (Integer, Integer) -> (Integer, Integer)
+pointDoubledNTimes :: Curve -> Integer -> (Integer, Integer) -> (Integer, Integer)
 pointDoubledNTimes c n p -- TODO: Memoize this
   | n == 0 = p
   | otherwise =
@@ -49,7 +55,7 @@ pointDoubledNTimes c n p -- TODO: Memoize this
 inf = -1 -- TODO: find a better way to handle infinity
 
 -- modular point addition
-pointAdd :: (Integer, Integer, Integer) -> (Integer, Integer) -> (Integer, Integer) -> (Integer, Integer)
+pointAdd :: Curve -> (Integer, Integer) -> (Integer, Integer) -> (Integer, Integer)
 pointAdd c p q
   | (xp, yp) == (inf, inf) = (xq, yq) -- P = 0
   | (xq, yq) == (inf, inf) = (xp, yp) -- Q = 0
@@ -59,11 +65,11 @@ pointAdd c p q
         xr = (m^2 - xp - xq) `mod` n
         yr = (-(yp + m * (xr - xp))) `mod` n
     in (xr, yr)
-  where (a, b, n) = c
-        (xp, yp)  = p
-        (xq, yq)  = q
+  where (Curve a b n) = c
+        (xp, yp)      = p
+        (xq, yq)      = q
 
-pointScale :: (Integer, Integer, Integer) -> Integer -> (Integer, Integer) -> (Integer, Integer)
+pointScale :: Curve -> Integer -> (Integer, Integer) -> (Integer, Integer)
 pointScale c s p
   | s == 0 = (inf, inf)
   | otherwise =
@@ -75,7 +81,7 @@ pointScale c s p
 -- tests --
 -----------
 
-curve = (2, 3, 97)
+curve = Curve 2 3 97
 
 tests = TestList [
   TestCase (assertEqual "modular inverse" 18 (mInverse 9 23)),
