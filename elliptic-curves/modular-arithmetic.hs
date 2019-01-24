@@ -36,11 +36,11 @@ mSlope (a, b, n) (xp, yp) (xq, yq) = ((yp - yq) * (mInverse (xp - xq) n)) `mod` 
 
 
 pointDoubledNTimes :: (Integer, Integer, Integer) -> Integer -> (Integer, Integer) -> (Integer, Integer)
-pointDoubledNTimes d n p -- TODO: Memoize this
+pointDoubledNTimes c n p -- TODO: Memoize this
   | n == 0 = p
   | otherwise =
-    let previousPoint = pointDoubledNTimes d (n - 1) p
-    in pointAdd d previousPoint previousPoint
+    let previousPoint = pointDoubledNTimes c (n - 1) p
+    in pointAdd c previousPoint previousPoint
 
 ----------------
 -- arithmetic --
@@ -50,48 +50,48 @@ inf = -1 -- TODO: find a better way to handle infinity
 
 -- modular point addition
 pointAdd :: (Integer, Integer, Integer) -> (Integer, Integer) -> (Integer, Integer) -> (Integer, Integer)
-pointAdd d p q
+pointAdd c p q
   | (xp, yp) == (inf, inf) = (xq, yq) -- P = 0
   | (xq, yq) == (inf, inf) = (xp, yp) -- Q = 0
   | (xp, yp) == (xq, (-yq) `mod` n) = (inf, inf)
   | otherwise =
-    let m  = if p == q then mTangent d p else mSlope d p q
+    let m  = if p == q then mTangent c p else mSlope c p q
         xr = (m^2 - xp - xq) `mod` n
         yr = (-(yp + m * (xr - xp))) `mod` n
     in (xr, yr)
-  where (a, b, n) = d
+  where (a, b, n) = c
         (xp, yp)  = p
         (xq, yq)  = q
 
 pointScale :: (Integer, Integer, Integer) -> Integer -> (Integer, Integer) -> (Integer, Integer)
-pointScale d s p
+pointScale c s p
   | s == 0 = (inf, inf)
   | otherwise =
     let indices = reverse (foldl (\acc (b, i) -> if b == 1 then acc ++ [i] else acc) [] (zip (toBin s) [0..]))
-        doubles = map (\i -> pointDoubledNTimes d i p) indices
-    in foldl (\acc double -> pointAdd d acc double) (head doubles) (tail doubles)
+        doubles = map (\i -> pointDoubledNTimes c i p) indices
+    in foldl (\acc double -> pointAdd c acc double) (head doubles) (tail doubles)
 
 -----------
 -- tests --
 -----------
 
-domain = (2, 3, 97)
+curve = (2, 3, 97)
 
 tests = TestList [
   TestCase (assertEqual "modular inverse" 18 (mInverse 9 23)),
   TestCase (assertEqual "modular inverse" 9  (mInverse 3 26)),
-  TestCase (assertEqual "modular slope" 32  (mSlope domain (3, 6) (12, 3))),
-  TestCase (assertEqual "modular point addition" (39, 6) (pointAdd domain (3, 6) (12, 3))),
-  TestCase (assertEqual "modular point addition" (24, 2) (pointAdd domain (12, 3) (12, 3))),
-  TestCase (assertEqual "modular point addition" (54, 12) (pointAdd domain (3, 6) (22, 5))),
-  TestCase (assertEqual "modular point addition" (12, 94) (pointAdd domain (22, 5) (32, 7))),
-  TestCase (assertEqual "modular point addition" (12, 94) (pointAdd domain (32, 7) (22, 5))),
-  TestCase (assertEqual "modular point addition" (21, 24) (pointAdd domain (22, 5) (22, 5))),
-  TestCase (assertEqual "modular point addition" (80, 10) (pointAdd domain (3, 6) (3, 6))),
-  TestCase (assertEqual "modular point addition" (3, 6) (pointAdd domain (3, 6) (inf, inf))),
-  TestCase (assertEqual "modular point scaling" (80, 10) (pointScale domain 347 (3, 6))),
-  TestCase (assertEqual "modular point scaling" (3, 6) (pointScale domain 21 (3, 6))),
-  TestCase (assertEqual "modular point scaling" (inf, inf) (pointScale domain 20 (3, 6)))
+  TestCase (assertEqual "modular slope" 32  (mSlope curve (3, 6) (12, 3))),
+  TestCase (assertEqual "modular point addition" (39, 6) (pointAdd curve (3, 6) (12, 3))),
+  TestCase (assertEqual "modular point addition" (24, 2) (pointAdd curve (12, 3) (12, 3))),
+  TestCase (assertEqual "modular point addition" (54, 12) (pointAdd curve (3, 6) (22, 5))),
+  TestCase (assertEqual "modular point addition" (12, 94) (pointAdd curve (22, 5) (32, 7))),
+  TestCase (assertEqual "modular point addition" (12, 94) (pointAdd curve (32, 7) (22, 5))),
+  TestCase (assertEqual "modular point addition" (21, 24) (pointAdd curve (22, 5) (22, 5))),
+  TestCase (assertEqual "modular point addition" (80, 10) (pointAdd curve (3, 6) (3, 6))),
+  TestCase (assertEqual "modular point addition" (3, 6) (pointAdd curve (3, 6) (inf, inf))),
+  TestCase (assertEqual "modular point scaling" (80, 10) (pointScale curve 347 (3, 6))),
+  TestCase (assertEqual "modular point scaling" (3, 6) (pointScale curve 21 (3, 6))),
+  TestCase (assertEqual "modular point scaling" (inf, inf) (pointScale curve 20 (3, 6)))
   ]
 
 runTests = runTestTT (tests)
