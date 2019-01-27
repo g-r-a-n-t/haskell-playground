@@ -2,15 +2,7 @@ module Gec.ModularArithmetic where
 
 import Test.HUnit
 
------------
--- Types --
------------
--- a b n
-data Curve = Curve Integer Integer Integer
-
--------------
 -- helpers --
--------------
 
 -- Extended Euclidean Algorithm
 -- taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm#Extended_2
@@ -48,9 +40,7 @@ pointDoubledNTimes c n p -- TODO: Memoize this
     let previousPoint = pointDoubledNTimes c (n - 1) p
     in pointAdd c previousPoint previousPoint
 
-----------------
--- arithmetic --
-----------------
+-- Arithmetic --
 
 inf = -1 -- TODO: find a better way to handle infinity
 
@@ -77,9 +67,7 @@ pointScale c s p
         doubles = map (\i -> pointDoubledNTimes c i p) indices
     in foldl (\acc double -> pointAdd c acc double) (head doubles) (tail doubles)
 
------------
--- tests --
------------
+-- Tests --
 
 curve = Curve 2 3 97
 
