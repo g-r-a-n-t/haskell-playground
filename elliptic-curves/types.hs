@@ -1,4 +1,4 @@
-module Gec.Curves where
+module Gec.Types where
 
 import Data.Char
 
@@ -7,7 +7,7 @@ asciiValue c
   | x < 58 = x - 48
   | x < 71 = x - 55
   | otherwise = 0
-  where x = ord c
+  where x = ord (toUpper c)
 
 asciiBits c = map (\b -> if b then 1 else 0) [x >= 8, x `mod` 8 >= 4, x `mod` 4 >= 2, x `mod` 2 == 1]
   where x = asciiValue c
