@@ -26,11 +26,9 @@ verify d h z (r,s) =
   in r == xp `mod` n
 
 -- Tests --
-testDomain = Domain testCurve (3,6) 5 20
-
-ecdsaTests = TestList [
-  TestCase (assertEqual "signature creation" (28,16) (sign testDomain 3 2 2)),
-  TestCase (assertEqual "signature verification" True (verify testDomain (28,63) 41 (28,16)))
-  ]
-
-runEcdsaTests = runTestTT ecdsaTests
+runTests = runTestTT tests
+  where domain = Domain (Curve 2 3 97) (3,6) 5 20
+        tests = TestList [
+          TestCase (assertEqual "signature creation" (28,16) (sign domain 3 2 2)),
+          TestCase (assertEqual "signature verification" True (verify domain (28,63) 41 (28,16)))
+          ]

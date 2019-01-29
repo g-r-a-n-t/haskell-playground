@@ -69,24 +69,21 @@ pointScale c s p
     in foldl (\acc double -> pointAdd c acc double) (head doubles) (tail doubles)
 
 -- Tests --
-
-testCurve = Curve 2 3 97
-
-moudlarArithmeticTests = TestList [
-  TestCase (assertEqual "modular inverse" 18 (mInverse 9 23)),
-  TestCase (assertEqual "modular inverse" 9  (mInverse 3 26)),
-  TestCase (assertEqual "modular slope" 32  (mSlope testCurve (3, 6) (12, 3))),
-  TestCase (assertEqual "modular point addition" (39, 6) (pointAdd testCurve (3, 6) (12, 3))),
-  TestCase (assertEqual "modular point addition" (24, 2) (pointAdd testCurve (12, 3) (12, 3))),
-  TestCase (assertEqual "modular point addition" (54, 12) (pointAdd testCurve (3, 6) (22, 5))),
-  TestCase (assertEqual "modular point addition" (12, 94) (pointAdd testCurve (22, 5) (32, 7))),
-  TestCase (assertEqual "modular point addition" (12, 94) (pointAdd testCurve (32, 7) (22, 5))),
-  TestCase (assertEqual "modular point addition" (21, 24) (pointAdd testCurve (22, 5) (22, 5))),
-  TestCase (assertEqual "modular point addition" (80, 10) (pointAdd testCurve (3, 6) (3, 6))),
-  TestCase (assertEqual "modular point addition" (3, 6) (pointAdd testCurve (3, 6) (inf, inf))),
-  TestCase (assertEqual "modular point scaling" (80, 10) (pointScale testCurve 347 (3, 6))),
-  TestCase (assertEqual "modular point scaling" (3, 6) (pointScale testCurve 21 (3, 6))),
-  TestCase (assertEqual "modular point scaling" (inf, inf) (pointScale testCurve 20 (3, 6)))
-  ]
-
-runModularArithmeticTests = runTestTT moudlarArithmeticTests
+runTests = runTestTT tests
+  where curve = Curve 2 3 97
+        tests = TestList [
+          TestCase (assertEqual "modular inverse" 18 (mInverse 9 23)),
+          TestCase (assertEqual "modular inverse" 9  (mInverse 3 26)),
+          TestCase (assertEqual "modular slope" 32  (mSlope curve (3, 6) (12, 3))),
+          TestCase (assertEqual "modular point addition" (39, 6) (pointAdd curve (3, 6) (12, 3))),
+          TestCase (assertEqual "modular point addition" (24, 2) (pointAdd curve (12, 3) (12, 3))),
+          TestCase (assertEqual "modular point addition" (54, 12) (pointAdd curve (3, 6) (22, 5))),
+          TestCase (assertEqual "modular point addition" (12, 94) (pointAdd curve (22, 5) (32, 7))),
+          TestCase (assertEqual "modular point addition" (12, 94) (pointAdd curve (32, 7) (22, 5))),
+          TestCase (assertEqual "modular point addition" (21, 24) (pointAdd curve (22, 5) (22, 5))),
+          TestCase (assertEqual "modular point addition" (80, 10) (pointAdd curve (3, 6) (3, 6))),
+          TestCase (assertEqual "modular point addition" (3, 6) (pointAdd curve (3, 6) (inf, inf))),
+          TestCase (assertEqual "modular point scaling" (80, 10) (pointScale curve 347 (3, 6))),
+          TestCase (assertEqual "modular point scaling" (3, 6) (pointScale curve 21 (3, 6))),
+          TestCase (assertEqual "modular point scaling" (inf, inf) (pointScale curve 20 (3, 6)))
+          ]
