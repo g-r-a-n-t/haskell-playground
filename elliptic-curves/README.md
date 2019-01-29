@@ -1,6 +1,8 @@
+![](./header.png)
+
 # Elliptic Curves
 
-![](./header.png)
+Implementation of modular elliptic curve arithmetic and cryptographic functions.
 
 ## Supported operations
 ### Gec.ModularArithmetic
