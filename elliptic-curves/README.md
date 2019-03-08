@@ -2,7 +2,7 @@
 
 # Elliptic Curves
 
-Implementation of modular elliptic curve arithmetic and cryptographic functions.
+Implementation of elliptic curve operations in finite fields and cryptographic functions.
 
 ## Supported operations
 ### ModularArithmetic

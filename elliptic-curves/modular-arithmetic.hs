@@ -33,13 +33,16 @@ mTangent (Curve a b n) (x, y) = (3 * x^2 + a) * (mInverse (2 * y) n) `mod` n
 mSlope :: Curve -> (Integer, Integer) -> (Integer, Integer) -> Integer
 mSlope (Curve a b n) (xp, yp) (xq, yq) = ((yp - yq) * (mInverse (xp - xq) n)) `mod` n
 
-
 pointDoubledNTimes :: Curve -> Integer -> (Integer, Integer) -> (Integer, Integer)
 pointDoubledNTimes c n p -- TODO: Memoize this
   | n == 0 = p
   | otherwise =
     let previousPoint = pointDoubledNTimes c (n - 1) p
     in pointAdd c previousPoint previousPoint
+
+-- naive
+quadraticResidues :: Integer -> Integer -> [Integer]
+quadraticResidues q p = filter (\x -> x ^ 2 `mod` p == q `mod` p) [0..p]
 
 -- Arithmetic --
 
@@ -85,5 +88,7 @@ runTests = runTestTT tests
           TestCase (assertEqual "modular point addition" (3, 6) (pointAdd curve (3, 6) (inf, inf))),
           TestCase (assertEqual "modular point scaling" (80, 10) (pointScale curve 347 (3, 6))),
           TestCase (assertEqual "modular point scaling" (3, 6) (pointScale curve 21 (3, 6))),
-          TestCase (assertEqual "modular point scaling" (inf, inf) (pointScale curve 20 (3, 6)))
+          TestCase (assertEqual "modular point scaling" (inf, inf) (pointScale curve 20 (3, 6))),
+          TestCase (assertEqual "quadratic residue" [10, 87] (quadraticResidues 4950 97)),
+          TestCase (assertEqual "quadratic residue" [1, 22] (quadraticResidues 231 23))
           ]
