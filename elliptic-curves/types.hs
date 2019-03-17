@@ -17,7 +17,7 @@ hexBits s = concat (map (\c -> asciiBits c) s')
 
 hexValue s = foldl (\acc (b, i) -> if b == 1 then acc + 2^i else acc) 0 (zip (reverse (hexBits s)) [0..])
 
--- Curve = (a b n)
+-- Curve = (a b p)
 data Curve = Curve Integer Integer Integer deriving (Show)
 
 -- Domain = (curve G n h)

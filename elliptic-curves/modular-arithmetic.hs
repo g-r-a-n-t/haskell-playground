@@ -42,7 +42,7 @@ pointDoubledNTimes c n p -- TODO: Memoize this
 
 -- naive
 quadraticResidues :: Integer -> Integer -> [Integer]
-quadraticResidues q p = filter (\x -> x ^ 2 `mod` p == q `mod` p) [0..p]
+quadraticResidues q p = filter (\x -> x ^ 2 `mod` p == q `mod` p) [0..p-1]
 
 -- Arithmetic --
 
