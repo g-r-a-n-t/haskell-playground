@@ -1,13 +1,7 @@
 module Wesolowski where
 
 import Data.Bits
-
--- Helpers
-
-modExp :: Integer -> Integer -> Integer -> Integer
-modExp b 0 m = 1
-modExp b e m = t * modExp ((b * b) `mod` m) (shiftR e 1) m `mod` m
-  where t = if testBit e 0 then b `mod` m else 1
+import Math.NumberTheory.Powers.Modular
 
 -- Generate a keypair(pk, sk) based on some seed(s).
 -- keygen(s) -> (pk, sk)
@@ -20,8 +14,8 @@ keygen s = (143, 120) -- temporary keypair based on prime numbers, 11 and 13.
 trapdoor :: Integer -> Integer -> Integer -> Integer -> (Integer, Integer)
 trapdoor pk sk x t =
   let g = x -- Hash x to G
-      e = modExp 2 t sk -- 2^t mod |G|
-      y = modExp g e pk -- g^e mod G
+      e = powMod 2 t sk -- 2^t mod |G|
+      y = powMod g e pk -- g^e mod G
   --     l = -- ???
   --     r = -- least residue of 2^t mod l
   --     q = -- (2^t - r)l^-1 mod |G|
@@ -36,7 +30,7 @@ trapdoor pk sk x t =
 eval :: Integer -> Integer -> Integer -> (Integer, Integer)
 eval pk x t =
   let g = x
-      y = modExp g (2 ^ t) pk
+      y = powMod g (2 ^ t) pk
   in (y, 0)
 
 -- Verifies that either eval or trapdoor have been computed correctly given
