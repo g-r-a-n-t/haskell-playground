@@ -1,20 +1,8 @@
-module Gvdf.Wesolowski where
+module Wesolowski where
 
-import System.Random
 import Data.Bits
 
 -- Helpers
-
-isPrime :: Int -> Bool
-isPrime k = null [ x | x <- [2..k - 1], k `mod` x == 0]
-
-randNum :: Int -> Int -> Int
-randNum bits seed = n
-  where (n, _) = randomR (2^(bits - 1), 2^bits - 1) (mkStdGen seed)
-
-randPrime :: Int -> Int -> Int
-randPrime bits seed =
-  until (\seed' -> isPrime (randNum bits seed')) (+1) seed
 
 modExp :: Integer -> Integer -> Integer -> Integer
 modExp b 0 m = 1
