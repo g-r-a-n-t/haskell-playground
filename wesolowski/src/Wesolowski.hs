@@ -1,12 +1,16 @@
 module Wesolowski where
 
-import Data.Bits
-import Math.NumberTheory.Powers.Modular
+import Math.NumberTheory.Powers.Modular as PM
+import Codec.Crypto.RSA.Pure as RSA
+import Crypto.Random as RND
 
 -- Generate a keypair(pk, sk) based on some seed(s).
 -- keygen(s) -> (pk, sk)
-keygen :: Integer ->  (Integer, Integer)
-keygen s = (143, 120) -- temporary keypair based on prime numbers, 11 and 13.
+keygen :: CryptoRandomGen g => g -> Int -> Either String (Integer, Integer)
+keygen g s =
+  case RSA.generatePQ g s of
+    Left _ -> Left "Unable to generate RSA keypair"
+    Right (p, q, _) -> Right (p*q, (p-1)*(q-1))
 
 -- Compute a value(y) from input(x) with a specified number of sequential
 -- steps(t) using the secret key(sk) and provide a proof(p).
@@ -14,8 +18,8 @@ keygen s = (143, 120) -- temporary keypair based on prime numbers, 11 and 13.
 trapdoor :: Integer -> Integer -> Integer -> Integer -> (Integer, Integer)
 trapdoor pk sk x t =
   let g = x -- Hash x to G
-      e = powMod 2 t sk -- 2^t mod |G|
-      y = powMod g e pk -- g^e mod G
+      e = PM.powMod 2 t sk -- 2^t mod |G|
+      y = PM.powMod g e pk -- g^e mod G
   --     l = -- ???
   --     r = -- least residue of 2^t mod l
   --     q = -- (2^t - r)l^-1 mod |G|
@@ -30,7 +34,7 @@ trapdoor pk sk x t =
 eval :: Integer -> Integer -> Integer -> (Integer, Integer)
 eval pk x t =
   let g = x
-      y = powMod g (2 ^ t) pk
+      y = PM.powMod g (2 ^ t) pk
   in (y, 0)
 
 -- Verifies that either eval or trapdoor have been computed correctly given
