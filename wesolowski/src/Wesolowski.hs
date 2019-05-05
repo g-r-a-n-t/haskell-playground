@@ -1,8 +1,9 @@
 module Wesolowski where
 
-import Math.NumberTheory.Powers.Modular as PM
 import Codec.Crypto.RSA.Pure as RSA
 import Crypto.Random as RND
+import Data.Bits as B
+
 
 -- Generate a keypair(pk, sk) based on some seed(s).
 -- keygen(s) -> (pk, sk)
@@ -18,8 +19,8 @@ keygen g s =
 trapdoor :: Integer -> Integer -> Integer -> Integer -> (Integer, Integer)
 trapdoor pk sk x t =
   let g = x -- Hash x to G
-      e = PM.powMod 2 t sk -- 2^t mod |G|
-      y = PM.powMod g e pk -- g^e mod G
+      e = modExp 2 t sk -- 2^t mod |G|
+      y = modExp g e pk -- g^e mod G
   --     l = -- ???
   --     r = -- least residue of 2^t mod l
   --     q = -- (2^t - r)l^-1 mod |G|
@@ -34,7 +35,7 @@ trapdoor pk sk x t =
 eval :: Integer -> Integer -> Integer -> (Integer, Integer)
 eval pk x t =
   let g = x
-      y = PM.powMod g (2 ^ t) pk
+      y = modExp g (2^t) pk
   in (y, 0)
 
 -- Verifies that either eval or trapdoor have been computed correctly given
@@ -42,3 +43,10 @@ eval pk x t =
 -- verify(pk, x, y, p, t) -> valid
 verify :: Integer -> Integer -> Integer -> Integer -> Integer -> Bool
 verify pk x y p t = False
+
+-- Modular exponentiation. This is fast, but not memory safe, which makes
+-- it impractical. Needs to be updated.
+modExp :: Integer -> Integer -> Integer -> Integer
+modExp b 0 m = 1
+modExp b e m = t * modExp ((b * b) `mod` m) (B.shiftR e 1) m `mod` m
+  where t = if B.testBit e 0 then b `mod` m else 1
