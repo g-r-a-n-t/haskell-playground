@@ -3,9 +3,11 @@ module Wesolowski where
 import Codec.Crypto.RSA.Pure as RSA
 import Crypto.Random as RND
 import Data.Bits as B
+import Data.ByteString.Char8 as BS
+import Crypto.Random.DRBG as DRBG
 
 
--- Generate a keypair(pk, sk) based on some seed(s).
+-- Generate a random keypair(pk, sk) of the given modulus bits(s).
 -- keygen(s) -> (pk, sk)
 keygen :: CryptoRandomGen g => g -> Int -> Either String (Integer, Integer)
 keygen g s =
@@ -18,12 +20,12 @@ keygen g s =
 -- trapdoor(sk, x, t) -> (y, p)
 trapdoor :: Integer -> Integer -> Integer -> Integer -> (Integer, Integer)
 trapdoor pk sk x t =
-  let g = x -- Hash x to G
+  let g = x -- TODO: use a hash function
       e = modExp 2 t sk -- 2^t mod |G|
       y = modExp g e pk -- g^e mod G
-  --     l = -- ???
-  --     r = -- least residue of 2^t mod l
-  --     q = -- (2^t - r)l^-1 mod |G|
+      Right l = toPrime $ (show g) ++ "-" ++ (show y) -- Hprime(bin(g)|||bin(y)) TODO: implement as specified
+      r = modExp 2 t l -- least residue of 2^t mod l
+      --q = -- (2^t - r)l^-1 mod |G|
   --     p = -- g^q
   -- in (y, p)
   in (y, 0)
@@ -50,3 +52,13 @@ modExp :: Integer -> Integer -> Integer -> Integer
 modExp b 0 m = 1
 modExp b e m = t * modExp ((b * b) `mod` m) (B.shiftR e 1) m `mod` m
   where t = if B.testBit e 0 then b `mod` m else 1
+
+-- Hashes a given string to some prime.
+toPrime :: String -> Either String Integer
+toPrime s =
+  case RND.newGen (BS.pack (s++(Prelude.unwords $ Prelude.replicate 40 "0"))) of
+      Right g ->
+        case RSA.largeRandomPrime (g :: DRBG.HashDRBG) 16 of
+          Right (p, _) -> Right p
+          Left _ -> Left "Couldn't generate prime."
+      Left e -> Left (show e)
