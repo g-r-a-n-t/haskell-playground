@@ -3,14 +3,14 @@ module Gec.Types where
 import Data.Char
 
 -- Helpers --
-asciiValue c
+hexCharValue c
   | x < 58 = x - 48
   | x < 71 = x - 55
   | otherwise = 0
   where x = ord (toUpper c)
 
 asciiBits c = map (\b -> if b then 1 else 0) [x >= 8, x `mod` 8 >= 4, x `mod` 4 >= 2, x `mod` 2 == 1]
-  where x = asciiValue c
+  where x = hexCharValue c
 
 hexBits s = concat (map (\c -> asciiBits c) s')
   where s' = foldl (\acc c -> if elem c "0123456789ABCDEF" then acc ++ [c] else acc) [] s

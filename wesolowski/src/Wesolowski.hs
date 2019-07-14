@@ -23,9 +23,9 @@ trapdoor pk sk x t =
   let g = x -- TODO: use a hash function
       e = modExp 2 t sk -- 2^t mod |G|
       y = modExp g e pk -- g^e mod G
-      Right l = toPrime $ (show g) ++ "-" ++ (show y) -- Hprime(bin(g)|||bin(y)) TODO: implement as specified
+      l = toPrime $ (show g) ++ "-" ++ (show y) -- Hprime(bin(g)|||bin(y)) TODO: implement as specified
       r = modExp 2 t l -- least residue of 2^t mod l
-      --q = -- (2^t - r)l^-1 mod |G|
+      --q =  -- (2^t - r)l^-1 mod |G|
   --     p = -- g^q
   -- in (y, p)
   in (y, 0)
@@ -54,11 +54,27 @@ modExp b e m = t * modExp ((b * b) `mod` m) (B.shiftR e 1) m `mod` m
   where t = if B.testBit e 0 then b `mod` m else 1
 
 -- Hashes a given string to some prime.
-toPrime :: String -> Either String Integer
+toPrime :: String -> Integer
 toPrime s =
   case RND.newGen (BS.pack (s++(Prelude.unwords $ Prelude.replicate 40 "0"))) of
       Right g ->
         case RSA.largeRandomPrime (g :: DRBG.HashDRBG) 16 of
           Right (p, _) -> Right p
-          Left _ -> Left "Couldn't generate prime."
-      Left e -> Left (show e)
+          Left _ -> Right 0
+      Left e -> Right 0
+
+-- Extended Euclidean Algorithm
+-- taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm#Extended_2
+eGCD :: Integer -> Integer -> (Integer,Integer,Integer)
+eGCD 0 b = (b, 0, 1)
+eGCD a b = let (g, s, t) = eGCD (b `mod` a) a
+           in (g, t - (b `div` a) * s, s)
+
+-- Modular inverse
+-- ax = 1 (mod n)
+modInv :: Integer -> Integer -> Integer
+modInv a n
+ | x*a' + y*n == 1 && gcd == 1 = x `mod` n
+ | otherwise = error "unable to compute inverse"
+ where a' = a `mod` n
+       (gcd, x, y) = eGCD a' n
