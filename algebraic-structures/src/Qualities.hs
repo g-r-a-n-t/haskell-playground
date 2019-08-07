@@ -16,3 +16,4 @@ isCommunicative :: Eq a => [a] -> (a -> a -> a) -> Bool
 isCommunicative _A op = and [op a b == op b a | (a, b) <- pairs]
                         where pairs = [(a, b) | a <- _A, b <- _A]
 
+

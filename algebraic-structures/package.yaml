@@ -21,7 +21,9 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- containers >=0.5.11
+- containers >=0.6 && < 0.7
+- hspec >=2.6 && < 3
+- QuickCheck >= 2.12 && < 3
 
 library:
   source-dirs: src
@@ -39,7 +41,7 @@ executables:
 
 tests:
   algebraic-structures-test:
-    main:                Spec.hs
+    main:                QualitiesSpec.hs
     source-dirs:         test
     ghc-options:
     - -threaded
