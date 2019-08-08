@@ -1,7 +1,9 @@
 module Qualities (
   hasClosure,
   isAssociative,
-  isCommunicative
+  isCommunicative,
+  hasIdentity,
+  hasClosure
 ) where
 
 hasClosure :: Eq a => [a] -> (a -> a -> a) -> Bool
@@ -16,4 +18,13 @@ isCommunicative :: Eq a => [a] -> (a -> a -> a) -> Bool
 isCommunicative _A op = and [op a b == op b a | (a, b) <- pairs]
                         where pairs = [(a, b) | a <- _A, b <- _A]
 
+hasIdentity :: Eq a => [a] -> a -> (a -> a -> a) -> Bool
+hasIdentity _A e op
+  | not $ elem e _A = False                               -- e <- A
+  | otherwise = all (\a -> op e a == a && op a e == a) _A -- e * a = a * e = a, a <- A
 
+hasInvertibility :: Eq a => [a] -> a -> (a -> a) -> (a -> a -> a) -> Bool
+hasInvertibility _A e inv op
+ | not $ all (\(_, i) -> elem i _A) pairs = False                -- -a <- A, a <- A
+ | otherwise = all (\(a, i) -> op a i == e && op i a == e) pairs -- a * i = i * a = e, a <- A
+  where pairs = [(a, inv a) | a <- _A]
