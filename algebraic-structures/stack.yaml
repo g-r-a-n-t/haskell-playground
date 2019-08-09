@@ -1,5 +1,5 @@
 flags: {}
 packages:
 - .
-extra-deps: []
+extra-deps: ["modular-arithmetic-1.2.1.5@sha256:af7daf1856fcab5674dee30485bbee046f31081fba5d9c99395fc4fb9e4ee557"]
 resolver: lts-13.30

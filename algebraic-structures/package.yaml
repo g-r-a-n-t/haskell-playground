@@ -24,6 +24,7 @@ dependencies:
 - containers >=0.6 && < 0.7
 - hspec >=2.6 && < 3
 - QuickCheck >= 2.12 && < 3
+- modular-arithmetic >= 1.2 && < 2
 
 library:
   source-dirs: src
@@ -41,7 +42,7 @@ executables:
 
 tests:
   algebraic-structures-test:
-    main:                QualitiesSpec.hs
+    main:                Spec.hs
     source-dirs:         test
     ghc-options:
     - -threaded

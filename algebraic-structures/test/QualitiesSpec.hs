@@ -1,3 +1,5 @@
+module QualitiesSpec (spec) where
+
 import Test.Hspec
 import Test.QuickCheck
 import Control.Exception (evaluate)
@@ -11,8 +13,8 @@ exponentiation a b = a ^ b
 division a b = a / b
 additionOver7 a b = (a + b) `mod` 7
 
-main :: IO ()
-main = hspec $ do
+spec :: Spec
+spec = do
   describe "Qualities.hasClossure" $ do
     it "returns true for integers mod 7 over addition" $ do
       hasClosure finitePositiveIntegersOver7 additionOver7 `shouldBe` True
