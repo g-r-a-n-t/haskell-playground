@@ -9,21 +9,36 @@ import Qualities
 -- Groups contain the following elements: a carrier set `[a]`, an identity element `a`, an inverse operation `(a -> a)`,
 -- and an operation `(a -> a -> a)`.
 data Group a = Group [a] a (a -> a) (a -> a -> a)
-newGroup _G e inv op = Group _G e inv op
+newGroup _S e inv op = Group _S e inv op
 
--- Verifies that the Group elements do in fact form a Group algebra.
+-- Group homomorphisms consist of the following elements: two groups `Group a` and `Group b` and a map from the first
+-- set to the second `(a -> b)`.
+data Homomorphism a b = Homomorphism (Group a) (Group b) (a -> b)
+newHomomorphism _G _H f = Homomorphism _G _H f
+
+-- Verifies that the elements do in fact form a Group algebra.
 -- This is only computationally feasible on small carrier sets.
 isGroup :: Eq a => Group a -> (Bool, String)
-isGroup (Group _G e inv op)
-  | not $ hasClosure _G op = (False, "The group does not have closure.")
-  | not $ isAssociative _G op = (False, "The operation is not associative.")
-  | not $ hasIdentity _G e op = (False, "The group does not have a valid identity element.")
-  | not $ isInvertible _G e inv op = (False, "The group is not invertible.")
+isGroup (Group _S e inv op)
+  | not $ hasClosure _S op = (False, "The group does not have closure.")
+  | not $ isAssociative _S op = (False, "The operation is not associative.")
+  | not $ hasIdentity _S e op = (False, "The group does not have a valid identity element.")
+  | not $ isInvertible _S e inv op = (False, "The group is not invertible.")
   | otherwise = (True, "")
 
+-- Verifies that the elements do in fact form an Abelian Group algebra.
 isAbelianGroup :: Eq a => Group a -> (Bool, String)
-isAbelianGroup (Group _G e inv op)
+isAbelianGroup (Group _S e inv op)
   | not $ isGroupRes = (False, isGroupErr)
-  | not $ isCommunicative _G op = (False, "The group is not communicative.")
+  | not $ isCommunicative _S op = (False, "The group is not communicative.")
   | otherwise = (True, "")
-  where (isGroupRes, isGroupErr) = isGroup (Group _G e inv op)
+  where (isGroupRes, isGroupErr) = isGroup (Group _S e inv op)
+
+-- TODO: Include check that all results of the homomorphic function are in H.
+isHomomorphism :: Eq a => Eq b => Homomorphism a b -> (Bool, String)
+isHomomorphism (Homomorphism _G _H f)
+  | not $ all (\(a, b) -> f (opG a b) == opH (f a) (f b)) pairs = (False, "The homomorphism is not valid.")
+  | otherwise = (True, "")
+  where pairs = [(a, b) | a <- _Sg, b <- _Sg]
+        Group _Sg _ _ opG = _G
+        Group _Sh _ _ opH = _H

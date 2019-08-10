@@ -7,17 +7,16 @@ import Control.Exception (evaluate)
 import Groups
 import Data.Modular
 
-
 multiplicativeGroupOfIntegersModulo9 = newGroup _G e inv' mul
-  where _G  = [1,2,4,5,7,8] :: [Mod Integer 9]
-        e   = 1 :: Mod Integer 9
-        inv' a = inv a :: Mod Integer 9
+  where _G      = [1,2,4,5,7,8] :: [Mod Integer 9]
+        e       = 1 :: Mod Integer 9
+        inv' a  = inv a :: Mod Integer 9
         mul a b = a * b :: Mod Integer 9
 
 first10IntegersOverAddition = newGroup _G e inv add
- where _G = [1..10]
-       e  = 0
-       inv a = -a
+ where _G      = [1..10]
+       e       = 0
+       inv a   = -a
        add a b = a + b
 
 spec :: Spec
