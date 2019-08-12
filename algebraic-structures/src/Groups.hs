@@ -34,10 +34,12 @@ isAbelianGroup (Group _S e inv op)
   | otherwise = (True, "")
   where (isGroupRes, isGroupErr) = isGroup (Group _S e inv op)
 
--- TODO: Include check that all results of the homomorphic function are in H.
+-- Verifies that the elements do in fact form a Homomorphism.
+-- This assumes each of the groups provided are valid.
 isHomomorphism :: Eq a => Eq b => Homomorphism a b -> (Bool, String)
 isHomomorphism (Homomorphism _G _H f)
-  | not $ all (\(a, b) -> f (opG a b) == opH (f a) (f b)) pairs = (False, "The homomorphism is not valid.")
+  | not $ all (\a -> elem (f a) _Sh) _Sg = (False, "The function maps an element of G to an element outside of H.")
+  | not $ all (\(a, b) -> f (opG a b) == opH (f a) (f b)) pairs = (False, "The equality check failed.")
   | otherwise = (True, "")
   where pairs = [(a, b) | a <- _Sg, b <- _Sg]
         Group _Sg _ _ opG = _G
