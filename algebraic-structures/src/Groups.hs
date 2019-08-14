@@ -1,5 +1,6 @@
 module Groups (
   newGroup,
+  newHomomorphism,
   isGroup,
   isAbelianGroup,
   isHomomorphic
@@ -14,8 +15,8 @@ newGroup _S e inv op = Group _S e inv op
 
 -- Group homomorphisms consist of the following elements: two groups `Group a` and `Group b` and a map from the first
 -- set to the second `(a -> b)`.
-data Homomorphism a b = Homomorphism (Group a) (Group b) (a -> b)
-newHomomorphism _G _H f = Homomorphism _G _H f
+data Homomorphism a b = Homomorphism (a -> b) (Group a) (Group b)
+newHomomorphism f _G _H = Homomorphism f _G _H
 
 -- Verifies that the elements do in fact form a Group algebra.
 -- This is only computationally feasible on small carrier sets.
@@ -38,7 +39,7 @@ isAbelianGroup (Group _S e inv op)
 -- Verifies that the elements do in fact form a Homomorphism.
 -- This assumes each of the groups provided are valid.
 isHomomorphic :: Eq a => Eq b => Homomorphism a b -> (Bool, String)
-isHomomorphic (Homomorphism _G _H f)
+isHomomorphic (Homomorphism f _G _H)
   | not $ all (\a -> elem (f a) _Sh) _Sg = (False, "The function maps an element of G to an element outside of H.")
   | not $ all (\(a, b) -> f (opG a b) == opH (f a) (f b)) pairs = (False, "The equality check failed.")
   | otherwise = (True, "")

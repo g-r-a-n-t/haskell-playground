@@ -22,12 +22,21 @@ integersMod3OverAddition = newGroup _S e inv' (+)
         e      = 0 :: Mod Integer 3
         inv' a = -a :: Mod Integer 3
 
---z3ToZ6by2x =
+integersMod6OverAddition = newGroup _S e inv' (+)
+  where _S     = [0..5] :: [Mod Integer 6]
+        e      = 0 :: Mod Integer 6
+        inv' a = -a :: Mod Integer 6
+
+z3ToZ6by2x = newHomomorphism f integersMod3OverAddition integersMod6OverAddition
+  where f x = 2 * toMod'(x) :: Mod Integer 6
+
+z3ToZN9by2x = newHomomorphism f integersMod3OverAddition multiplicativeGroupOfIntegersMod9
+  where f x = 2 * toMod'(x) :: Mod Integer 9
 
 spec :: Spec
 spec = do
   describe "Groups.isGroup" $ do
-    it "returns true for the multiplicative group of integers modulo 9." $ do
+    it "returns true for the multiplicative group of integers mod 9." $ do
       isGroup multiplicativeGroupOfIntegersMod9 `shouldBe` (True, "")
     it "returns false for the first 10 positive integers over addition." $ do
       isGroup first10PositiveIntegersOverAddition `shouldNotBe` (True, "")
@@ -37,3 +46,9 @@ spec = do
       isAbelianGroup multiplicativeGroupOfIntegersMod9 `shouldBe` (True, "")
     it "returns true for the integers mod 3 over addition." $ do
       isAbelianGroup integersMod3OverAddition `shouldBe` (True, "")
+
+  describe "Groups.isHomomorphic" $ do
+    it "returns true for the integers mod 3 to integers mod 6 by f = 2x." $ do
+      isHomomorphic z3ToZ6by2x `shouldBe` (True, "")
+    it "returns false for the integers mod 3 to multiplicative group of integer mod 9 by f = 2x." $ do
+      isHomomorphic z3ToZN9by2x `shouldNotBe` (True, "")
