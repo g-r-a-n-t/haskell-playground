@@ -1,7 +1,8 @@
 module Groups (
   newGroup,
   isGroup,
-  isAbelianGroup
+  isAbelianGroup,
+  isHomomorphic
 ) where
 
 import Qualities
@@ -36,8 +37,8 @@ isAbelianGroup (Group _S e inv op)
 
 -- Verifies that the elements do in fact form a Homomorphism.
 -- This assumes each of the groups provided are valid.
-isHomomorphism :: Eq a => Eq b => Homomorphism a b -> (Bool, String)
-isHomomorphism (Homomorphism _G _H f)
+isHomomorphic :: Eq a => Eq b => Homomorphism a b -> (Bool, String)
+isHomomorphic (Homomorphism _G _H f)
   | not $ all (\a -> elem (f a) _Sh) _Sg = (False, "The function maps an element of G to an element outside of H.")
   | not $ all (\(a, b) -> f (opG a b) == opH (f a) (f b)) pairs = (False, "The equality check failed.")
   | otherwise = (True, "")

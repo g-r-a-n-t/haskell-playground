@@ -25,7 +25,6 @@ dependencies:
 - hspec >=2.6 && < 3
 - QuickCheck >= 2.12 && < 3
 - modular-arithmetic >= 1.2 && < 2
-- permutation >= 0.5
 
 library:
   source-dirs: src

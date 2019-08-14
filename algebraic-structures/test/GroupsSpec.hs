@@ -6,7 +6,6 @@ import Test.QuickCheck
 import Control.Exception (evaluate)
 import Groups
 import Data.Modular
-import Data.Permute
 
 multiplicativeGroupOfIntegersMod9 = newGroup _S e inv' (*)
   where _S      = [1,2,4,5,7,8] :: [Mod Integer 9]
