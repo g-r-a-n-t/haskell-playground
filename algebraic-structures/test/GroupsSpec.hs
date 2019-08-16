@@ -27,11 +27,14 @@ integersMod6OverAddition = newGroup _S e inv' (+)
         e      = 0 :: Mod Integer 6
         inv' a = -a :: Mod Integer 6
 
-z3ToZ6by2x = newHomomorphism f integersMod3OverAddition integersMod6OverAddition
+z3ToZ6by2xHomo = newHomomorphism f integersMod3OverAddition integersMod6OverAddition
   where f x = 2 * toMod'(x) :: Mod Integer 6
 
-z3ToZN9by2x = newHomomorphism f integersMod3OverAddition multiplicativeGroupOfIntegersMod9
+z3ToZN9by2xHomo = newHomomorphism f integersMod3OverAddition multiplicativeGroupOfIntegersMod9
   where f x = 2 * toMod'(x) :: Mod Integer 9
+
+z3ToZ6by2xIso = newIsomorphism f integersMod3OverAddition integersMod6OverAddition
+  where f x = 2 * toMod'(x) :: Mod Integer 6
 
 spec :: Spec
 spec = do
@@ -49,6 +52,10 @@ spec = do
 
   describe "Groups.isHomomorphic" $ do
     it "returns true for the integers mod 3 to integers mod 6 by f = 2x." $ do
-      isHomomorphic z3ToZ6by2x `shouldBe` (True, "")
+      isHomomorphic z3ToZ6by2xHomo `shouldBe` (True, "")
     it "returns false for the integers mod 3 to multiplicative group of integer mod 9 by f = 2x." $ do
-      isHomomorphic z3ToZN9by2x `shouldNotBe` (True, "")
+      isHomomorphic z3ToZN9by2xHomo `shouldNotBe` (True, "")
+
+  describe "Groups.isIsomorphic" $ do
+    it "returns false for the integers mod 3 to integers mod 6 by f = 2x." $ do
+      isIsomorphic z3ToZ6by2xIso `shouldNotBe` (True, "")

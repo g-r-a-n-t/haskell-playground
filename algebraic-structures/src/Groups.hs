@@ -1,9 +1,11 @@
 module Groups (
   newGroup,
   newHomomorphism,
+  newIsomorphism,
   isGroup,
   isAbelianGroup,
-  isHomomorphic
+  isHomomorphic,
+  isIsomorphic
 ) where
 
 import Qualities
