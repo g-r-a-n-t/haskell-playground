@@ -1,7 +1,7 @@
 module Qualities (
   hasClosure,
   isAssociative,
-  isCommunicative,
+  isCommutative,
   hasIdentity,
   isInvertible,
   isGeneralMap,
@@ -20,8 +20,8 @@ isAssociative :: Eq a => [a] -> (a -> a -> a) -> Bool
 isAssociative _S op = and [op (op a b) c == op a (op b c) | (a, b, c) <- triplets]
                       where triplets = [(a, b, c) | a <- _S, b <- _S, c <- _S]
 
-isCommunicative :: Eq a => [a] -> (a -> a -> a) -> Bool
-isCommunicative _S op = and [op a b == op b a | (a, b) <- pairs]
+isCommutative :: Eq a => [a] -> (a -> a -> a) -> Bool
+isCommutative _S op = and [op a b == op b a | (a, b) <- pairs]
                         where pairs = [(a, b) | a <- _S, b <- _S]
 
 hasIdentity :: Eq a => [a] -> a -> (a -> a -> a) -> Bool
@@ -43,7 +43,7 @@ isGeneralMap f _A _B = all (\a -> elem (f a) _B) _A
 isSurjective :: Eq a => Eq b => (a -> b) -> [a] -> [b] -> Bool
 isSurjective f _A _B
   | not $ isGeneralMap f _A _B = False
-  | otherwise = all (\a' -> elem a' _B) _A'
+  | otherwise = all (\b -> elem b _A') _B
   where _A' = map f _A
 
 -- All elements of f(A) occur once.
@@ -54,4 +54,4 @@ isInjective f _A _B
   where _A' = map f _A
 
 isBijective :: Eq a => Eq b => (a -> b) -> [a] -> [b] -> Bool
-isBijective f _A _B = isInjective f _A _B && isBijective f _A _B
+isBijective f _A _B = isInjective f _A _B && isSurjective f _A _B

@@ -37,7 +37,7 @@ isGroup (Group _S e inv op)
 isAbelianGroup :: Eq a => Group a -> (Bool, String)
 isAbelianGroup (Group _S e inv op)
   | not $ isGroupRes = (False, isGroupErr)
-  | not $ isCommunicative _S op = (False, "The group is not communicative.")
+  | not $ isCommutative _S op = (False, "The group is not commutative.")
   | otherwise = (True, "")
   where (isGroupRes, isGroupErr) = isGroup (Group _S e inv op)
 
