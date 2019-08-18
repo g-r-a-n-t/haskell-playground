@@ -58,7 +58,7 @@ spec = do
       isAssociative first10PositiveIntegers (+) `shouldBe` True
     it "returns false for first 10 positive integers over exponentiation." $ do
       isAssociative first10PositiveIntegers (^) `shouldBe` False
-    it "returns true for first 10 positive integers as floats over division." $ do
+    it "returns false for first 10 positive integers as floats over division." $ do
       isAssociative first10PositiveIntegersAsFloats (/) `shouldBe` False
 
   describe "Qualities.isCommutative" $ do
