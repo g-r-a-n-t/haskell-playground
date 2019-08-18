@@ -6,6 +6,7 @@ import Test.QuickCheck
 import Control.Exception (evaluate)
 import Groups
 import Data.Modular
+import Math.Algebra.Group.PermutationGroup
 
 multiplicativeGroupOfIntegersMod9 = newGroup _S e inv' (*)
   where _S      = [1,2,4,5,7,8] :: [Mod Integer 9]
@@ -27,6 +28,25 @@ integersMod6OverAddition = newGroup _S e inv' (+)
         e      = 0 :: Mod Integer 6
         inv' a = -a :: Mod Integer 6
 
+permuFourGroup = newGroup _S e inv (*)
+  where _S    = [e, a, b, a * b]
+        a     = p [[1,2],[3],[4]]
+        b     = p [[1],[2],[3,4]]
+        e     = 1
+        inv p = p
+
+kleinFourGroup = newGroup _S "e" inv op
+  where _S = ["e", "a", "b", "ab"]
+        inv a = a
+        op a b
+          | a == "e" = b -- Product of an element an identity
+          | b == "e" = a
+          | a == b = "e" -- Inverse of an element is itself
+          | a == "a" && b == "b" = "ab" -- Product of "a" and "b" is "ab"
+          | a == "b" && b == "a" = "ab"
+          | a == "a" || b == "a" = "b" -- At this point we know one of the elements is "ab"
+          | a == "b" || b == "b" = "a"
+
 z3ToZ6by2xHomo = newHomomorphism f integersMod3OverAddition integersMod6OverAddition
   where f x = 2 * toMod'(x) :: Mod Integer 6
 
@@ -36,6 +56,13 @@ z3ToZN9by2xHomo = newHomomorphism f integersMod3OverAddition multiplicativeGroup
 z3ToZ6by2xIso = newIsomorphism f integersMod3OverAddition integersMod6OverAddition
   where f x = 2 * toMod'(x) :: Mod Integer 6
 
+k4ToM4byMap = newIsomorphism f kleinFourGroup permuFourGroup
+  where f x
+          | x == "e" = 1
+          | x == "a" = p [[1,2],[3],[4]]
+          | x == "b" = p [[1],[2],[3,4]]
+          | x == "ab" = (f "a") * (f "b")
+
 spec :: Spec
 spec = do
   describe "Groups.isGroup" $ do
@@ -43,12 +70,20 @@ spec = do
       isGroup multiplicativeGroupOfIntegersMod9 `shouldBe` (True, "")
     it "returns false for the first 10 positive integers over addition." $ do
       isGroup first10PositiveIntegersOverAddition `shouldNotBe` (True, "")
+    it "returns true for the permutation four-group." $ do
+      isGroup permuFourGroup `shouldBe` (True, "")
+    it "returns true for the klein four-group." $ do
+      isGroup kleinFourGroup `shouldBe` (True, "")
 
   describe "Groups.isAbelianGroup" $ do
     it "returns true for the multiplicative group of integers modulo 9." $ do
       isAbelianGroup multiplicativeGroupOfIntegersMod9 `shouldBe` (True, "")
     it "returns true for the integers mod 3 over addition." $ do
       isAbelianGroup integersMod3OverAddition `shouldBe` (True, "")
+    it "returns true for the permutation four-group." $ do
+      isAbelianGroup permuFourGroup `shouldBe` (True, "")
+    it "returns true for the klein four-group." $ do
+      isAbelianGroup kleinFourGroup `shouldBe` (True, "")
 
   describe "Groups.isHomomorphic" $ do
     it "returns true for the integers mod 3 to integers mod 6 by f = 2x." $ do
@@ -59,3 +94,5 @@ spec = do
   describe "Groups.isIsomorphic" $ do
     it "returns false for the integers mod 3 to integers mod 6 by f = 2x." $ do
       isIsomorphic z3ToZ6by2xIso `shouldNotBe` (True, "")
+    it "returns true for the klein four group to the permutation four group by a direct map." $ do
+      isIsomorphic k4ToM4byMap `shouldBe` (True, "")
