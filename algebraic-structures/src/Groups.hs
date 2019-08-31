@@ -5,7 +5,9 @@ module Groups (
   isGroup,
   isAbelianGroup,
   isHomomorphic,
-  isIsomorphic
+  isIsomorphic,
+  divisors,
+  choose
 ) where
 
 import Qualities
@@ -43,6 +45,18 @@ isAbelianGroup (Group _S e inv op)
   | otherwise = (True, "")
   where (isGroupRes, isGroupErr) = isGroup (Group _S e inv op)
 
+-- needs cleanup and testing
+subgroups :: Eq a => (Group a -> (Bool, String)) -> Group a -> [Group a]
+subgroups verifier _G = filter (\group -> fst (verifier group)) groups
+  where (Group _S e inv op) = _G
+        orders = divisors (length _S)
+        subsets = foldl (\accum order -> (choose _S order) ++ accum) [] orders
+        subsets' = filter (\subset -> elem e subset ) subsets
+        groups = map (\subset -> (Group subset e inv op)) subsets'
+
+-- isSimple :: Eq a => (Group a -> (Bool, String)) Group a
+-- isSimple verifier _G
+
 -- Verifies that the elements do in fact form a Homomorphism.
 -- This assumes each of the groups provided are valid.
 isHomomorphic :: Eq a => Eq b => Homomorphism a b -> (Bool, String)
@@ -54,6 +68,8 @@ isHomomorphic (Homomorphism f _G _H)
         Group _Sg _ _ opG = _G
         Group _Sh _ _ opH = _H
 
+-- Verifies that the elements do in fact form a Homomorphism.
+-- This assumes each of the groups provided are valid.
 isIsomorphic :: Eq a => Eq b => Isomorphism a b -> (Bool, String)
 isIsomorphic (Isomorphism f _G _H)
   | not $ isHomoRes = (False, isHomoErr)
@@ -62,3 +78,12 @@ isIsomorphic (Isomorphism f _G _H)
   where (isHomoRes, isHomoErr) = isHomomorphic (newHomomorphism f _G _H)
         Group _Sg _ _ _ = _G
         Group _Sh _ _ _ = _H
+
+divisors :: Int -> [Int]
+divisors x = filter (\y -> x `mod` y == 0) [1..x `div` 2]
+
+-- Copied from https://stackoverflow.com/questions/14267196/fast-obtention-of-all-the-subsets-of-size-n-in-haskell
+choose :: [b] -> Int -> [[b]]
+_      `choose` 0       = [[]]
+[]     `choose` _       =  []
+(x:xs) `choose` k       =  (x:) `fmap` (xs `choose` (k-1)) ++ xs `choose` k
