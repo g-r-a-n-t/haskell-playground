@@ -1,13 +1,14 @@
 module Groups (
   newGroup,
+  Group(Group),
   newHomomorphism,
   newIsomorphism,
   isGroup,
   isAbelianGroup,
   isHomomorphic,
   isIsomorphic,
-  divisors,
-  choose
+  isSubgroup,
+  subgroups
 ) where
 
 import Qualities
@@ -45,14 +46,27 @@ isAbelianGroup (Group _S e inv op)
   | otherwise = (True, "")
   where (isGroupRes, isGroupErr) = isGroup (Group _S e inv op)
 
--- needs cleanup and testing
-subgroups :: Eq a => (Group a -> (Bool, String)) -> Group a -> [Group a]
-subgroups verifier _G = filter (\group -> fst (verifier group)) groups
-  where (Group _S e inv op) = _G
-        orders = divisors (length _S)
-        subsets = foldl (\accum order -> (choose _S order) ++ accum) [] orders
-        subsets' = filter (\subset -> elem e subset ) subsets
-        groups = map (\subset -> (Group subset e inv op)) subsets'
+-- Generate a list of subgroups [H] from a group G
+-- This assumes that G is a valid group
+subgroups :: Eq a => Group a -> [Group a]
+subgroups _G = filter (\_H -> fst (isSubgroup _H _G)) _Hs
+  where (Group _Sg e inv op) = _G
+        ords = divisors (length _Sg) -- candidate orders
+        _Shs = foldl (\acc ord -> (choose _Sg ord) ++ acc) [] ords -- candidate sets
+        _Shs' = filter (\_Sh -> elem e _Sh) _Shs -- filter out sets that dont contain e
+        _Hs = map (\_Sh' -> (Group _Sh' e inv op)) _Shs' -- create groups from sets
+
+-- Verifies that the group H is in fact a subgroup f G
+-- This assumes G is a valid group and that operations are consistent between H and G
+isSubgroup :: Eq a => Group a -> Group a -> (Bool, String)
+isSubgroup _H _G
+  | not $ all (\h -> elem h _Sg) _Sh = (False, "An element of H is not in G.")
+  | not $ hasClosure _Sh op = (False, "H does not have closure over the provided operation.")
+  | not $ isInvertible _Sh e inv op = (False, "H does not have closure over inverses.")
+  | otherwise = (True, "")
+  where (Group _Sh e inv op) = _H
+        (Group _Sg _ _ _) = _G
+
 
 -- isSimple :: Eq a => (Group a -> (Bool, String)) Group a
 -- isSimple verifier _G
