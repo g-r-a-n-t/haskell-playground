@@ -13,11 +13,6 @@ multiplicativeGroupOfIntegersMod9 = newGroup _S e inv' (*)
         e       = 1 :: Mod Integer 9
         inv' a  = inv a :: Mod Integer 9
 
-multiplicativeGroupOfIntegersMod13 = newGroup _S e inv' (*)
-  where _S      = [1,13] :: [Mod Integer 13]
-        e       = 1 :: Mod Integer 13
-        inv' a  = inv a :: Mod Integer 13
-
 first10PositiveIntegersOverAddition = newGroup _S e inv (+)
  where _S      = [1..10]
        e       = 0
@@ -37,6 +32,11 @@ integersMod8OverAddition = newGroup _S e inv' (+)
   where _S     = [0..7] :: [Mod Integer 8]
         e      = 0 :: Mod Integer 8
         inv' a = -a :: Mod Integer 8
+
+integersMod113OverAddition = newGroup _S e inv' (+)
+  where _S     = [0..112] :: [Mod Integer 113]
+        e      = 0 :: Mod Integer 113
+        inv' a = -a :: Mod Integer 113
 
 first5IntegersMod8OverAddition = newGroup _S e inv' (+)
   where _S     = [0..4] :: [Mod Integer 8]
@@ -103,6 +103,8 @@ spec = do
       isAbelianGroup multiplicativeGroupOfIntegersMod9 `shouldBe` (True, "")
     it "returns true for the integers mod 3 over addition." $ do
       isAbelianGroup integersMod3OverAddition `shouldBe` (True, "")
+    it "returns true for the integers mod 113 over addition." $ do
+      isAbelianGroup integersMod113OverAddition `shouldBe` (True, "")
     it "returns true for the permutation four-group." $ do
       isAbelianGroup permuFourGroup `shouldBe` (True, "")
     it "returns true for the klein four-group." $ do
@@ -141,5 +143,5 @@ spec = do
       Groups.isSimple integersMod8OverAddition `shouldBe` False
     it "returns false for (Z/9Z)*" $ do
       Groups.isSimple multiplicativeGroupOfIntegersMod9 `shouldBe` False
-    it "returns true for (Z/13Z)*" $ do
-      Groups.isSimple multiplicativeGroupOfIntegersMod13 `shouldBe` True
+    it "returns true for Z113" $ do
+      Groups.isSimple integersMod113OverAddition `shouldBe` True
