@@ -14,7 +14,7 @@ multiplicativeGroupOfIntegersMod9 = newGroup _S e inv' (*)
         inv' a  = inv a :: Mod Integer 9
 
 multiplicativeGroupOfIntegersMod13 = newGroup _S e inv' (*)
-  where _S      = [1,2,4,5,7,8,9,10,11,12] :: [Mod Integer 13]
+  where _S      = [1,13] :: [Mod Integer 13]
         e       = 1 :: Mod Integer 13
         inv' a  = inv a :: Mod Integer 13
 
@@ -136,3 +136,10 @@ spec = do
     it "returns 4 subgroups for Z8" $ do
       length(subgroups integersMod8OverAddition) `shouldBe` 4
 
+  describe "Groups.isSimple" $ do
+    it "returns false for Z8" $ do
+      Groups.isSimple integersMod8OverAddition `shouldBe` False
+    it "returns false for (Z/9Z)*" $ do
+      Groups.isSimple multiplicativeGroupOfIntegersMod9 `shouldBe` False
+    it "returns true for (Z/13Z)*" $ do
+      Groups.isSimple multiplicativeGroupOfIntegersMod13 `shouldBe` True
