@@ -13,6 +13,11 @@ multiplicativeGroupOfIntegersMod9 = newGroup _S e inv' (*)
         e       = 1 :: Mod Integer 9
         inv' a  = inv a :: Mod Integer 9
 
+multiplicativeGroupOfIntegersMod13 = newGroup _S e inv' (*)
+  where _S      = [1,2,4,5,7,8,9,10,11,12] :: [Mod Integer 13]
+        e       = 1 :: Mod Integer 13
+        inv' a  = inv a :: Mod Integer 13
+
 first10PositiveIntegersOverAddition = newGroup _S e inv (+)
  where _S      = [1..10]
        e       = 0
@@ -119,10 +124,15 @@ spec = do
     it "returns true from the trivial subgroup of Z8." $ do
       isSubgroup (z8Subgroups!!0) integersMod8OverAddition `shouldBe` (True, "")
     it "returns true from the first proper subgroup of Z8, {0, 4}." $ do
-      isSubgroup (z8Subgroups!!0) integersMod8OverAddition `shouldBe` (True, "")
+      isSubgroup (z8Subgroups!!1) integersMod8OverAddition `shouldBe` (True, "")
     it "returns true from the second proper subgroup of Z8, {0, 2, 4, 6}." $ do
-      isSubgroup (z8Subgroups!!0) integersMod8OverAddition `shouldBe` (True, "")
+      isSubgroup (z8Subgroups!!2) integersMod8OverAddition `shouldBe` (True, "")
     it "returns true for Z8 itself." $ do
       isSubgroup integersMod8OverAddition integersMod8OverAddition `shouldBe` (True, "")
     it "returns false for an invalid subgroup of Z8, {0,1,2,3,4}." $ do
       isSubgroup first5IntegersMod8OverAddition integersMod8OverAddition `shouldNotBe` (True, "")
+
+  describe "Groups.subgroups" $ do
+    it "returns 4 subgroups for Z8" $ do
+      length(subgroups integersMod8OverAddition) `shouldBe` 4
+

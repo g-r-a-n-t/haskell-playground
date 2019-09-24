@@ -1,6 +1,6 @@
 module Groups (
-  newGroup,
   Group(Group),
+  newGroup,
   newHomomorphism,
   newIsomorphism,
   isGroup,
@@ -8,7 +8,8 @@ module Groups (
   isHomomorphic,
   isIsomorphic,
   isSubgroup,
-  subgroups
+  subgroups,
+  isSimple
 ) where
 
 import Qualities
@@ -49,7 +50,7 @@ isAbelianGroup (Group _S e inv op)
 -- Generate a list of subgroups [H] from a group G
 -- This assumes that G is a valid group
 subgroups :: Eq a => Group a -> [Group a]
-subgroups _G = filter (\_H -> fst (isSubgroup _H _G)) _Hs
+subgroups _G = _G:(filter (\_H -> fst (isSubgroup _H _G)) _Hs)
   where (Group _Sg e inv op) = _G
         ords = divisors (length _Sg) -- candidate orders
         _Shs = foldl (\acc ord -> (choose _Sg ord) ++ acc) [] ords -- candidate sets
@@ -68,8 +69,8 @@ isSubgroup _H _G
         (Group _Sg _ _ _) = _G
 
 
--- isSimple :: Eq a => (Group a -> (Bool, String)) Group a
--- isSimple verifier _G
+isSimple :: Eq a => Group a -> Bool
+isSimple _G = length(subgroups _G) == 2
 
 -- Verifies that the elements do in fact form a Homomorphism.
 -- This assumes each of the groups provided are valid.
