@@ -1,9 +1,9 @@
-module QualitiesSpec (spec) where
+module PropertiesSpec (spec) where
 
 import Test.Hspec
 import Test.QuickCheck
 import Control.Exception (evaluate)
-import Qualities
+import Properties
 
 -- Sets
 first10PositiveIntegers = [1..10]
@@ -47,13 +47,13 @@ additiveInverseMod7 a = (-a) `mod` 7
 
 spec :: Spec
 spec = do
-  describe "Qualities.hasClossure" $ do
+  describe "Properties.hasClossure" $ do
     it "returns true for integers mod 7 over addition." $ do
       hasClosure integersMod7 additionMod7 `shouldBe` True
     it "returns false for first 10 positive integers over addition." $ do
       hasClosure first10PositiveIntegers (+) `shouldBe` False
 
-  describe "Qualities.isAssociative" $ do
+  describe "Properties.isAssociative" $ do
     it "returns true for first 10 positive integers over addition." $ do
       isAssociative first10PositiveIntegers (+) `shouldBe` True
     it "returns false for first 10 positive integers over exponentiation." $ do
@@ -61,7 +61,7 @@ spec = do
     it "returns false for first 10 positive integers as floats over division." $ do
       isAssociative first10PositiveIntegersAsFloats (/) `shouldBe` False
 
-  describe "Qualities.isCommutative" $ do
+  describe "Properties.isCommutative" $ do
     it "returns true for first 10 positive integers over addition." $ do
       isCommutative first10PositiveIntegers (+) `shouldBe` True
     it "returns false for first 10 positive integers over exponentiation." $ do
@@ -69,11 +69,11 @@ spec = do
     it "returns false for first 10 positive floats over division." $ do
       isCommutative first10PositiveIntegersAsFloats (/) `shouldBe` False
 
-  describe "Qualities.isInvertible" $ do
+  describe "Properties.isInvertible" $ do
     it "returns true for the integers mod 7 over addition." $ do
       isInvertible integersMod7 0 additiveInverseMod7 additionMod7 `shouldBe` True
 
-  describe "Qualities.isGeneralMap" $ do
+  describe "Properties.isGeneralMap" $ do
     it "returns false for a non-general map." $ do
       isGeneralMap nonGeneralMap [1..4] aThruD `shouldBe` False
     it "returns true for a general-only map." $ do
@@ -85,7 +85,7 @@ spec = do
     it "returns true for a bijective map." $ do
       isGeneralMap bijective [1..4] aThruD `shouldBe` True
 
-  describe "Qualities.isInjective" $ do
+  describe "Properties.isInjective" $ do
     it "returns false for a non-general map." $ do
       isInjective nonGeneralMap [1..4] aThruD `shouldBe` False
     it "returns false for a general-only map." $ do
@@ -97,7 +97,7 @@ spec = do
     it "returns true for a bijective map." $ do
       isInjective bijective [1..4] aThruD `shouldBe` True
 
-  describe "Qualities.isSurjective" $ do
+  describe "Properties.isSurjective" $ do
     it "returns false for a non-general map." $ do
       isSurjective nonGeneralMap [1..4] aThruD `shouldBe` False
     it "returns false for a general-only map." $ do
@@ -109,7 +109,7 @@ spec = do
     it "returns true for a bijective map." $ do
       isSurjective bijective [1..4] aThruD `shouldBe` True
 
-  describe "Qualities.isBijective" $ do
+  describe "Properties.isBijective" $ do
     it "returns false for a non-general map." $ do
       isBijective nonGeneralMap [1..4] aThruD `shouldBe` False
     it "returns false for a general-only map." $ do

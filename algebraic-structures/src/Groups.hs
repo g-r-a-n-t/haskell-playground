@@ -12,7 +12,7 @@ module Groups (
   isSimple
 ) where
 
-import Qualities
+import Properties
 
 -- Groups contain the following elements: a carrier set `[a]`, an identity element `a`, an inverse operation `(a -> a)`,
 -- and an operation `(a -> a -> a)`.

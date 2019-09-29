@@ -1,4 +1,4 @@
-module Qualities (
+module Properties (
   hasClosure,
   isAssociative,
   isCommutative,
