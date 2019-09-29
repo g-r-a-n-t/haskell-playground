@@ -4,6 +4,7 @@ module Properties (
   isCommutative,
   hasIdentity,
   isInvertible,
+  isDistributive,
   isGeneralMap,
   isBijective,
   isSurjective,
@@ -42,6 +43,17 @@ isInvertible _S op
   | isNothing e = False
   | otherwise = all (\a -> any (\b -> op a b == fromJust e) _S) _S
   where e = identity _S op
+
+isLeftDistributive :: Eq a => [a] -> (a -> a -> a) -> (a -> a -> a) -> Bool
+isLeftDistributive _S add mul = all (\(a, b, c) -> mul a (add b c) == add (mul a b) (mul a c)) trips
+  where trips = [(a, b, c) | a <- _S, b <- _S, c <- _S]
+
+isRightDistributive :: Eq a => [a] -> (a -> a -> a) -> (a -> a -> a) -> Bool
+isRightDistributive _S add mul = all (\(a, b, c) -> mul (add b c) a == add (mul b a) (mul c a)) trips
+  where trips = [(a, b, c) | a <- _S, b <- _S, c <- _S]
+
+isDistributive :: Eq a => [a] -> (a -> a -> a) -> (a -> a -> a) -> Bool
+isDistributive _S add mul = isLeftDistributive _S add mul && isRightDistributive _S add mul
 
 -- All elements of f(A) map to an element in B.
 isGeneralMap :: Eq a => Eq b => (a -> b) -> [a] -> [b] -> Bool

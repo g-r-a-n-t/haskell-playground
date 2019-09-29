@@ -32,17 +32,17 @@ newIsomorphism f _G _H = Isomorphism f _G _H
 -- This is only computationally feasible on small carrier sets.
 isGroup :: Eq a => Group a -> (Bool, String)
 isGroup (Group _S op)
-  | not $ hasClosure _S op = (False, "The group does not have closure.")
+  | not $ hasClosure _S op = (False, "The operation does not have closure.")
   | not $ isAssociative _S op = (False, "The operation is not associative.")
-  | not $ hasIdentity _S op = (False, "The group does not have a valid identity element.")
-  | not $ isInvertible _S op = (False, "The group is not invertible.")
+  | not $ hasIdentity _S op = (False, "The set does not have an identity element.")
+  | not $ isInvertible _S op = (False, "The operation is not invertible.")
   | otherwise = (True, "")
 
 -- Verifies that the elements do in fact form an Abelian Group algebra.
 isAbelianGroup :: Eq a => Group a -> (Bool, String)
 isAbelianGroup (Group _S op)
   | not $ isGroupRes = (False, isGroupErr)
-  | not $ isCommutative _S op = (False, "The group is not commutative.")
+  | not $ isCommutative _S op = (False, "The operation is not commutative.")
   | otherwise = (True, "")
   where (isGroupRes, isGroupErr) = isGroup (Group _S op)
 
