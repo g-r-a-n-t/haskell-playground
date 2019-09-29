@@ -14,10 +14,9 @@ module Groups (
 
 import Properties
 
--- Groups contain the following elements: a carrier set `[a]`, an identity element `a`, an inverse operation `(a -> a)`,
--- and an operation `(a -> a -> a)`.
-data Group a = Group [a] a (a -> a) (a -> a -> a)
-newGroup _S e inv op = Group _S e inv op
+-- Groups contain the following elements: a carrier set `[a]` and an operation `(a -> a -> a)`.
+data Group a = Group [a] (a -> a -> a)
+newGroup _S op = Group _S op
 
 -- Group homomorphisms consist of the following elements: two groups `Group a` and `Group b` and a map from the first
 -- set to the second `(a -> b)`.
@@ -32,30 +31,29 @@ newIsomorphism f _G _H = Isomorphism f _G _H
 -- Verifies that the elements do in fact form a Group algebra.
 -- This is only computationally feasible on small carrier sets.
 isGroup :: Eq a => Group a -> (Bool, String)
-isGroup (Group _S e inv op)
+isGroup (Group _S op)
   | not $ hasClosure _S op = (False, "The group does not have closure.")
   | not $ isAssociative _S op = (False, "The operation is not associative.")
-  | not $ hasIdentity _S e op = (False, "The group does not have a valid identity element.")
-  | not $ isInvertible _S e inv op = (False, "The group is not invertible.")
+  | not $ hasIdentity _S op = (False, "The group does not have a valid identity element.")
+  | not $ isInvertible _S op = (False, "The group is not invertible.")
   | otherwise = (True, "")
 
 -- Verifies that the elements do in fact form an Abelian Group algebra.
 isAbelianGroup :: Eq a => Group a -> (Bool, String)
-isAbelianGroup (Group _S e inv op)
+isAbelianGroup (Group _S op)
   | not $ isGroupRes = (False, isGroupErr)
   | not $ isCommutative _S op = (False, "The group is not commutative.")
   | otherwise = (True, "")
-  where (isGroupRes, isGroupErr) = isGroup (Group _S e inv op)
+  where (isGroupRes, isGroupErr) = isGroup (Group _S op)
 
 -- Generate a list of subgroups [H] from a group G
 -- This assumes that G is a valid group
 subgroups :: Eq a => Group a -> [Group a]
 subgroups _G = _G:(filter (\_H -> fst (isSubgroup _H _G)) _Hs)
-  where (Group _Sg e inv op) = _G
+  where (Group _Sg op) = _G
         ords = divisors (length _Sg) -- candidate orders
         _Shs = foldl (\acc ord -> (choose _Sg ord) ++ acc) [] ords -- candidate sets
-        _Shs' = filter (\_Sh -> elem e _Sh) _Shs -- filter out sets that dont contain e
-        _Hs = map (\_Sh' -> (Group _Sh' e inv op)) _Shs' -- create groups from sets
+        _Hs = map (\_Sh' -> (Group _Sh' op)) _Shs -- create groups from sets
 
 -- Verifies that the group H is in fact a subgroup f G
 -- This assumes G is a valid group and that operations are consistent between H and G
@@ -63,10 +61,10 @@ isSubgroup :: Eq a => Group a -> Group a -> (Bool, String)
 isSubgroup _H _G
   | not $ all (\h -> elem h _Sg) _Sh = (False, "An element of H is not in G.")
   | not $ hasClosure _Sh op = (False, "H does not have closure over the provided operation.")
-  | not $ isInvertible _Sh e inv op = (False, "H does not have closure over inverses.")
+  | not $ isInvertible _Sh op = (False, "H does not have closure over inverses.")
   | otherwise = (True, "")
-  where (Group _Sh e inv op) = _H
-        (Group _Sg _ _ _) = _G
+  where (Group _Sh op) = _H
+        (Group _Sg _) = _G
 
 
 isSimple :: Eq a => Group a -> Bool
@@ -80,8 +78,8 @@ isHomomorphic (Homomorphism f _G _H)
   | not $ all (\(a, b) -> f (opG a b) == opH (f a) (f b)) pairs = (False, "The equality check failed.")
   | otherwise = (True, "")
   where pairs = [(a, b) | a <- _Sg, b <- _Sg]
-        Group _Sg _ _ opG = _G
-        Group _Sh _ _ opH = _H
+        Group _Sg opG = _G
+        Group _Sh opH = _H
 
 -- Verifies that the elements do in fact form a Homomorphism.
 -- This assumes each of the groups provided are valid.
@@ -91,8 +89,8 @@ isIsomorphic (Isomorphism f _G _H)
   | not $ isBijective f _Sg _Sh = (False, "The mapping function is not bijective.")
   | otherwise = (True, "")
   where (isHomoRes, isHomoErr) = isHomomorphic (newHomomorphism f _G _H)
-        Group _Sg _ _ _ = _G
-        Group _Sh _ _ _ = _H
+        Group _Sg _ = _G
+        Group _Sh _ = _H
 
 divisors :: Int -> [Int]
 divisors x = filter (\y -> x `mod` y == 0) [1..x `div` 2]

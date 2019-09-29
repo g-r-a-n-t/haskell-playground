@@ -11,6 +11,7 @@ module Properties (
 ) where
 
 import Data.List.Unique
+import Data.Maybe
 
 hasClosure :: Eq a => [a] -> (a -> a -> a) -> Bool
 hasClosure _S op = and [elem (op a b) _S | (a, b) <- pairs]
@@ -24,16 +25,23 @@ isCommutative :: Eq a => [a] -> (a -> a -> a) -> Bool
 isCommutative _S op = and [op a b == op b a | (a, b) <- pairs]
                         where pairs = [(a, b) | a <- _S, b <- _S]
 
-hasIdentity :: Eq a => [a] -> a -> (a -> a -> a) -> Bool
-hasIdentity _S e op
-  | not $ elem e _S = False                               -- e <- A
-  | otherwise = all (\a -> op e a == a && op a e == a) _S -- e * a = a * e = a, a <- A
+identity :: Eq a => [a] -> (a -> a -> a) -> Maybe a
+identity _S op
+  | length es /= (1 :: Int) = Nothing
+  | otherwise = Just (es!!0)
+  where es = filter (\e -> all (\a -> op e a == a && op a e == a) _S) _S -- e * a = a * e = a, a <- A
 
-isInvertible :: Eq a => [a] -> a -> (a -> a) -> (a -> a -> a) -> Bool
-isInvertible _S e inv op
- | not $ all (\(_, i) -> elem i _S) pairs = False                -- -a <- A, a <- A
- | otherwise = all (\(a, i) -> op a i == e && op i a == e) pairs -- a * i = i * a = e, a <- A
-  where pairs = [(a, inv a) | a <- _S]
+hasIdentity :: Eq a => [a] ->  (a -> a -> a) -> Bool
+hasIdentity _S op
+  | e == Nothing = False
+  | otherwise = True
+  where e = identity _S op
+
+isInvertible :: Eq a => [a] -> (a -> a -> a) -> Bool
+isInvertible _S op
+  | isNothing e = False
+  | otherwise = all (\a -> any (\b -> op a b == fromJust e) _S) _S
+  where e = identity _S op
 
 -- All elements of f(A) map to an element in B.
 isGeneralMap :: Eq a => Eq b => (a -> b) -> [a] -> [b] -> Bool

@@ -8,59 +8,44 @@ import Groups
 import Data.Modular
 import Math.Algebra.Group.PermutationGroup
 
-multiplicativeGroupOfIntegersMod9 = newGroup _S e inv' (*)
+multiplicativeGroupOfIntegersMod9 = newGroup _S (*)
   where _S      = [1,2,4,5,7,8] :: [Mod Integer 9]
-        e       = 1 :: Mod Integer 9
-        inv' a  = inv a :: Mod Integer 9
 
-first10PositiveIntegersOverAddition = newGroup _S e inv (+)
- where _S      = [1..10]
-       e       = 0
-       inv a   = -a
+first10PositiveIntegersOverAddition = newGroup _S (+)
+  where _S      = [1..10]
 
-integersMod3OverAddition = newGroup _S e inv' (+)
+integersMod3OverAddition = newGroup _S (+)
   where _S     = [0..2] :: [Mod Integer 3]
-        e      = 0 :: Mod Integer 3
-        inv' a = -a :: Mod Integer 3
 
-integersMod6OverAddition = newGroup _S e inv' (+)
+integersMod6OverAddition = newGroup _S (+)
   where _S     = [0..5] :: [Mod Integer 6]
-        e      = 0 :: Mod Integer 6
-        inv' a = -a :: Mod Integer 6
 
-integersMod8OverAddition = newGroup _S e inv' (+)
+integersMod8OverAddition = newGroup _S (+)
   where _S     = [0..7] :: [Mod Integer 8]
-        e      = 0 :: Mod Integer 8
-        inv' a = -a :: Mod Integer 8
 
-integersMod113OverAddition = newGroup _S e inv' (+)
+integersMod113OverAddition = newGroup _S (+)
   where _S     = [0..112] :: [Mod Integer 113]
-        e      = 0 :: Mod Integer 113
-        inv' a = -a :: Mod Integer 113
 
-first5IntegersMod8OverAddition = newGroup _S e inv' (+)
+first5IntegersMod8OverAddition = newGroup _S (+)
   where _S     = [0..4] :: [Mod Integer 8]
-        e      = 0 :: Mod Integer 8
-        inv' a = -a :: Mod Integer 8
 
 -- read: https://en.wikipedia.org/wiki/Subgroup#Example:_Subgroups_of_Z8
 z8Subgroups = [trivial, _J, _H, _G]
-  where (Group _S e inv op) = integersMod8OverAddition
-        trivial = newGroup [e] e inv op
-        _J      = newGroup [_S!!0, _S!!4] e inv op
-        _H      = newGroup [_S!!0, _S!!2, _S!!4, _S!!6] e inv op
+  where (Group _S op) = integersMod8OverAddition
+        trivial = newGroup [_S!!0] op
+        _J      = newGroup [_S!!0, _S!!4] op
+        _H      = newGroup [_S!!0, _S!!2, _S!!4, _S!!6] op
         _G      = integersMod8OverAddition
 
-permuFourGroup = newGroup _S e inv (*)
+permuFourGroup = newGroup _S (*)
   where _S    = [e, a, b, a * b]
         a     = p [[1,2],[3],[4]]
         b     = p [[1],[2],[3,4]]
         e     = 1
         inv p = p
 
-kleinFourGroup = newGroup _S "e" inv op
+kleinFourGroup = newGroup _S op
   where _S = ["e", "a", "b", "ab"]
-        inv a = a
         op a b
           | a == "e" = b -- Product of an element an identity
           | b == "e" = a

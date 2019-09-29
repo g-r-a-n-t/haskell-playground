@@ -71,7 +71,7 @@ spec = do
 
   describe "Properties.isInvertible" $ do
     it "returns true for the integers mod 7 over addition." $ do
-      isInvertible integersMod7 0 additiveInverseMod7 additionMod7 `shouldBe` True
+      isInvertible integersMod7 additionMod7 `shouldBe` True
 
   describe "Properties.isGeneralMap" $ do
     it "returns false for a non-general map." $ do
