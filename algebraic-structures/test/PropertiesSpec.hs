@@ -69,9 +69,21 @@ spec = do
     it "returns false for first 10 positive floats over division." $ do
       isCommutative first10PositiveIntegersAsFloats (/) `shouldBe` False
 
+  describe "Properties.hasIdentity" $ do
+    it "returns true for the first 10 positive integers over multiplication" $ do
+      hasIdentity first10PositiveIntegers (*) `shouldBe` True
+    it "returns false for the first 10 positive integers over addition" $ do
+      hasIdentity first10PositiveIntegers (+) `shouldBe` False
+
   describe "Properties.isInvertible" $ do
     it "returns true for the integers mod 7 over addition." $ do
       isInvertible integersMod7 additionMod7 `shouldBe` True
+
+  describe "Properties.isDistributive" $ do
+    it "returns true for addition and multiplication 'a * (b + c) = ab + ac'" $ do
+      isDistributive first10PositiveIntegers (+) (*) `shouldBe` True
+    it "returns false for multiplication and addition 'a + (b * c) /= (a + b) * (a + c)'" $ do
+      isDistributive first10PositiveIntegers (*) (+) `shouldBe` False
 
   describe "Properties.isGeneralMap" $ do
     it "returns false for a non-general map." $ do
