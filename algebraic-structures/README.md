@@ -1,6 +1,6 @@
 # Algebraic Structures
 
-This library supplies types for common algebraic structures and provides functions that check the validity of them. At the moment, these checks are computationally expensive and therefore can only be performed on small sets.
+This library supplies types for common algebraic structures and provides functions that check the validity of them.
 
 Running tests:
 ```sh
@@ -15,17 +15,15 @@ import AlgebraicStructures.Groups
 -- Create some groups 
 
 -- read: https://en.wikipedia.org/wiki/Permutation_group#Examples
-permuFourGroup = newGroup _S e inv (*)
+permuFourGroup = newGroup _S (*)
   where _S    = [e, a, b, a * b]
         a     = p [[1,2],[3],[4]]
         b     = p [[1],[2],[3,4]]
         e     = 1
-        inv p = p
 
 -- read: https://en.wikipedia.org/wiki/Klein_four-group
-kleinFourGroup = newGroup _S "e" inv op
+kleinFourGroup = newGroup _S op
   where _S = ["e", "a", "b", "ab"]
-        inv a = a
         op a b
           | a == "e" = b -- Product of an element an identity
           | b == "e" = a

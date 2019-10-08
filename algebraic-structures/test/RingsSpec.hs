@@ -5,6 +5,8 @@ import Test.QuickCheck
 import Control.Exception (evaluate)
 import Properties
 
+
+
 spec :: Spec
 spec = do
   describe "Rings.isRing" $ do

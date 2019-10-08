@@ -11,6 +11,7 @@ import Properties
 data Ring a = Ring [a] (a -> a -> a) (a -> a -> a)
 newRing _S add mul = Ring _S add mul
 
+-- Verifies whether or not the elements provided form a Ring algebra
 isRing :: Eq a => Ring a -> (Bool, String)
 isRing (Ring _S add mul)
   | not $ fst (isAbelianGroup (newGroup _S add)) = (False, "Not an abelian group over addition.")

@@ -29,7 +29,6 @@ data Isomorphism a b = Isomorphism (a -> b) (Group a) (Group b)
 newIsomorphism f _G _H = Isomorphism f _G _H
 
 -- Verifies that the elements do in fact form a Group algebra.
--- This is only computationally feasible on small carrier sets.
 isGroup :: Eq a => Group a -> (Bool, String)
 isGroup (Group _S op)
   | not $ hasClosure _S op = (False, "The operation does not have closure.")
