@@ -23,6 +23,8 @@ dependencies:
 - base >= 4.7 && < 5
 - hspec >=2.6 && < 3
 - QuickCheck >= 2.12 && < 3
+- algebraic-structures
+- modular-arithmetic >= 1.2 && < 2
 
 library:
   source-dirs: src
