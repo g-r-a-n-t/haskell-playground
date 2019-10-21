@@ -56,13 +56,13 @@ kleinFourGroup = newGroup _S op
           | a == "b" || b == "b" = "a"
 
 z3ToZ6by2xHomo = newHomomorphism f integersMod3OverAddition integersMod6OverAddition
-  where f x = 2 * toMod'(x) :: Mod Integer 6
+  where f x = 2 * toMod' x :: Mod Integer 6
 
 z3ToZN9by2xHomo = newHomomorphism f integersMod3OverAddition multiplicativeGroupOfIntegersMod9
-  where f x = 2 * toMod'(x) :: Mod Integer 9
+  where f x = 2 * toMod' x :: Mod Integer 9
 
 z3ToZ6by2xIso = newIsomorphism f integersMod3OverAddition integersMod6OverAddition
-  where f x = 2 * toMod'(x) :: Mod Integer 6
+  where f x = 2 * toMod' x  :: Mod Integer 6
 
 k4ToM4byMap = newIsomorphism f kleinFourGroup permuFourGroup
   where f x
