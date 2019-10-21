@@ -28,17 +28,6 @@ dependencies:
 library:
   source-dirs: src
 
-executables:
-  algebraic-structures-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - algebraic-structures
-
 tests:
   algebraic-structures-test:
     main:                Spec.hs
