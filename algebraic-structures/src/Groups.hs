@@ -1,5 +1,7 @@
 module Groups (
   Group(Group),
+  Homomorphism(Homomorphism),
+  Isomorphism(Isomorphism),
   newGroup,
   newHomomorphism,
   newIsomorphism,
