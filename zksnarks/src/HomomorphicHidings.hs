@@ -19,7 +19,7 @@ newHH _E _G _H = newHomomorphism _E _G _H
 -- the value 10 i.e. 1 + 9 = 10 /< Zp-2.
 -- This value needed to be removed from the group since the order of Zp-1 is 10 since it does not include 0.
 zpToZxpByGx = newHH _E _G _H
-  where _E x = 2 ^ (unMod x) :: Mod Integer 11
-        _G   = newGroup ([0..9] :: [Mod Integer 11]) (+)
-        _H   = newGroup ([1..10] :: [Mod Integer 11]) (*)
+  where _E x = 2 ^ x -- g = 2
+        _G   = newGroup [0..9] (+)
+        _H   = newGroup [1..10] (*)
 
