@@ -5,7 +5,6 @@ module HomomorphicHidings (
 ) where
 
 import Groups
-import Data.Modular
 
 -- Homomorphic Hiding
 --

@@ -3,7 +3,6 @@ module BlindEvaluations (
   cs, s, ws, ws', cs', ar
 ) where
 
-import Data.Modular
 import Groups
 import HomomorphicHidings
 
