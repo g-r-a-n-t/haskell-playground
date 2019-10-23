@@ -10,7 +10,7 @@ import Groups
 spec :: Spec
 spec = do
   describe "Test the realistic HH example in the first article." $ do
-    it "The HH is a homomorphism" $ do
+    it "The HH is (not) a homomorphism." $ do
       isHomomorphic zpToZxpByGx `shouldNotBe` (True, "")
 
 -- This test fails (when shouldNotBe is replaced with shouldBe), kinda pointless to check because the HH discussed
