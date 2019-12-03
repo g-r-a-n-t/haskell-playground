@@ -1,6 +1,7 @@
 module Rings (
   Ring(Ring),
-  newRing
+  newRing,
+  isRing
 ) where
 
 import Groups
@@ -15,6 +16,7 @@ newRing _S add mul = Ring _S add mul
 isRing :: Eq a => Ring a -> (Bool, String)
 isRing (Ring _S add mul)
   | not $ fst (isAbelianGroup (newGroup _S add)) = (False, "Not an abelian group over addition.")
+  | not $ hasClosure _S mul = (False, "The multapicative operation is not closed.")
   | not $ isAssociative _S mul = (False, "The multapicative operation is not associative.")
   | not $ isDistributive _S add mul = (False, "The operations are not distributive.")
   | otherwise = (True, "")
