@@ -26,17 +26,6 @@ dependencies:
 library:
   source-dirs: src
 
-executables:
-  BLS-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - BLS
-
 tests:
   BLS-test:
     main:                Spec.hs
@@ -47,3 +36,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - BLS
+    - hspec >=2.6 && < 3
+    - QuickCheck >= 2.12 && < 3

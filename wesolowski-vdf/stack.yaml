@@ -37,7 +37,13 @@ packages:
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
-extra-deps: [DRBG-0.5.5]
+extra-deps: [
+  'DRBG-0.5.5',
+  'modular-arithmetic-1.2.1.5@sha256:af7daf1856fcab5674dee30485bbee046f31081fba5d9c99395fc4fb9e4ee557',
+  'hspec-core-2.6.1@sha256:0c40dab5bc2293bf71e93919e29c2b7b0204736eb1fa7191519dc0f45477fab2',
+  'hspec-discover-2.6.1@sha256:c3cd149a4a53cd9c0a9c8149a72e10fba207570d8e81e94415a5baf9e61fefb1',
+  'QuickCheck-2.12.6.1@sha256:ce974f511174fbc3102bccb13d6d45781d327194f0311790b9f8db6a7cb1bab3'
+]
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

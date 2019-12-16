@@ -1,11 +1,11 @@
+{-# LANGUAGE DataKinds #-}
 module Wesolowski where
 
 import Codec.Crypto.RSA.Pure as RSA
 import Crypto.Random as RND
-import Data.Bits as B
 import Data.ByteString.Char8 as BS
 import Crypto.Random.DRBG as DRBG
-
+import Control.Monad
 
 -- Generate a random keypair(pk, sk) of the given modulus bits(s).
 -- keygen(s) -> (pk, sk)
@@ -49,9 +49,11 @@ verify pk x y p t = False
 -- Modular exponentiation. This is fast, but not memory safe, which makes
 -- it impractical. Needs to be updated.
 modExp :: Integer -> Integer -> Integer -> Integer
-modExp b 0 m = 1
-modExp b e m = t * modExp ((b * b) `mod` m) (B.shiftR e 1) m `mod` m
-  where t = if B.testBit e 0 then b `mod` m else 1
+modExp x y n = do
+  i <- 0
+  when (i < y) $ do
+    i = i + 1
+
 
 -- Hashes a given string to some prime.
 toPrime :: String -> Integer
@@ -59,9 +61,9 @@ toPrime s =
   case RND.newGen (BS.pack (s++(Prelude.unwords $ Prelude.replicate 40 "0"))) of
       Right g ->
         case RSA.largeRandomPrime (g :: DRBG.HashDRBG) 16 of
-          Right (p, _) -> Right p
-          Left _ -> Right 0
-      Left e -> Right 0
+          Right (p, _) -> p
+          Left _ -> 0
+      Left e -> 0
 
 -- Extended Euclidean Algorithm
 -- taken from https://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm#Extended_2

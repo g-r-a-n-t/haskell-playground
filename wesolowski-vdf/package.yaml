@@ -21,6 +21,11 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- modular-arithmetic >= 1.2
+- DRBG >= 0.5
+- RSA >= 2.3
+- crypto-api >= 0.13
+- bytestring >= 0.10
 
 library:
   source-dirs: src
@@ -46,3 +51,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - wesolowski
+    - hspec >= 2.6
+    - QuickCheck >= 2.12
